@@ -67,9 +67,22 @@ Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org
 | What | Value |
 |---|---|
 | Organisation signing key (operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
-| consent_anchor program id | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` (not yet deployed) |
+| consent_anchor program id (deployed 2026-09-29) | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
+| First anchored digest (sha256 of "abc", a test) | [tx on Solscan](https://solscan.io/tx/3v9np6vNam5n3tedeTKgZ8Y9L8cae5oVRk4RM4Lei6owzrgqRGUviVc9yubrFBukNJJ317rGDeemngArHP6uJGe7?cluster=devnet), PDA `6niv3FxgfdbiSqiVwUfpYbKwGNdJr93orqnE6og9t7tC` |
+
+## Try it (devnet)
+
+```bash
+npm ci && npm run build
+npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+```
+
+Anchoring a new digest needs the organisation keypair, which only the operator holds:
+`npm run anchor-digest -w scripts -- <64 hex>`.
 
 ## Status
 
-Step 0 (bootstrap) in progress. `packages/receipt` builds and its golden tests pass. The Anchor
-program source exists but has not been built or deployed. Read [HANDOVER.md](HANDOVER.md).
+Step 0 done. Step 2 partly done: program deployed to devnet, digest anchoring and digest-only
+verification work from the command line, duplicate anchoring is refused on chain. Not yet:
+relay endpoint, web verify panel, full-receipt verification (needs step 1 signatures).
+Read [HANDOVER.md](HANDOVER.md).

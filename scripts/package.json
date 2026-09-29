@@ -1,0 +1,20 @@
+{
+  "name": "@consent-receipts/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "anchor-digest": "tsx src/anchor-digest.ts",
+    "verify-receipt": "tsx src/verify-receipt.ts"
+  },
+  "dependencies": {
+    "@consent-receipts/receipt": "*",
+    "@coral-xyz/anchor": "^0.32.1",
+    "@solana/web3.js": "^1.99.0",
+    "bs58": "^6.0.0",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.9.3", "@types/node": "^24.3.0" }
+}

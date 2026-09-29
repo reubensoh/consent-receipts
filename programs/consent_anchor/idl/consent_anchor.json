@@ -1,0 +1,171 @@
+{
+  "address": "72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh",
+  "metadata": {
+    "name": "consent_anchor",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Anchors a consent receipt hash on Solana devnet: one PDA per receipt hash"
+  },
+  "instructions": [
+    {
+      "name": "anchor_receipt",
+      "docs": [
+        "Anchor a receipt hash. `receipt_hash` is sha256(canonical receipt body), see",
+        "docs/RECEIPT-FORMAT.md. The org key must sign and pays rent."
+      ],
+      "discriminator": [
+        136,
+        22,
+        95,
+        34,
+        144,
+        40,
+        8,
+        215
+      ],
+      "accounts": [
+        {
+          "name": "anchor",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  99,
+                  101,
+                  105,
+                  112,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "receipt_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "org",
+          "docs": [
+            "The organisation signing key. It pays, so the user's wallet never appears."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "receipt_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ReceiptAnchor",
+      "discriminator": [
+        21,
+        115,
+        187,
+        38,
+        82,
+        76,
+        88,
+        171
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "ReceiptAnchored",
+      "discriminator": [
+        72,
+        237,
+        204,
+        175,
+        136,
+        188,
+        9,
+        203
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "ReceiptAnchor",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "receipt_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "org",
+            "type": "pubkey"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          },
+          {
+            "name": "unix_time",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReceiptAnchored",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "receipt_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "org",
+            "type": "pubkey"
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          },
+          {
+            "name": "unix_time",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}
