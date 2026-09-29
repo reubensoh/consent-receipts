@@ -14,10 +14,13 @@ Copy questions go to the philosopher via the PO. Legal questions go to the lawye
 - The sheet states OUR terms and CITES the provider's policy by date and link. It never quotes
   the provider's policy as our promise. (Philosopher ruling, 2026-09-29.)
 - "not kept on our side". Never "deleted": the provider has its own retention window.
-- Sheet header, fixed: "Service: consent-receipts (demo). Operator: Regal Pines Pte. Ltd."
-  The operator name must match the holder of the org signing key and the copyright line; all
-  three changed together on 2026-09-29 when the entity was named. (Philosopher to confirm the
-  operator line reads the entity, per their own ruling.)
+- Sheet header, fixed (philosopher, 2026-09-29): "Service: Flair Health consent receipts
+  (prototype). Operator: Regal Pines Pte. Ltd." The operator name matches the holder of the org
+  signing key and the copyright line; all three move together. Flair Health may be named.
+- "Consent Compact" is a candidate name. It may appear NOWHERE until the PO confirms the
+  trademark filing. Until then, the descriptive service line above.
+- The privacy line ("nothing identifying the user goes on chain") rests on the account dump in
+  docs/RECEIPT-FORMAT.md. Keep it current if the account layout ever changes.
 - "anchored" for what the program does with a digest. Never "notarised".
 - The "what a court would be shown" beat shows the artifacts an outsider can inspect: the
   receipt, the two signatures, the digest, the devnet account, the slot and block time. It never

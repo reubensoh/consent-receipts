@@ -1,21 +1,22 @@
 {
-  "name": "@consent-receipts/scripts",
+  "name": "@consent-receipts/relay",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
+    "dev": "tsx src/server.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "anchor-digest": "tsx src/anchor-digest.ts",
-    "verify-receipt": "tsx src/verify-receipt.ts"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@consent-receipts/receipt": "*",
     "@consent-receipts/anchor-client": "*",
-    "@coral-xyz/anchor": "^0.32.1",
+    "@consent-receipts/receipt": "*",
+    "@hono/node-server": "^1.14.0",
     "@solana/web3.js": "^1.99.0",
     "bs58": "^6.0.0",
+    "hono": "^4.7.0",
     "tweetnacl": "^1.0.3"
   },
-  "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.9.3", "@types/node": "^24.3.0" }
+  "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.9.3", "vitest": "^3.2.4", "@types/node": "^24.3.0" }
 }

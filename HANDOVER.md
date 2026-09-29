@@ -62,3 +62,22 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
   package was built). Fixed: root `typecheck` builds packages/receipt first. Run 36574179259 green on both jobs.
 - Engineer 1's first brief written: docs/briefs/001-verify-step0.md.
 - Next: PO answers N2/N3; step 1 brief after brief 001 closes; relay skeleton with POST /anchor.
+
+### 2026-09-29 (night)
+- Rulings applied: operator line confirmed; service line "Flair Health consent receipts
+  (prototype)" (golden hash re-pinned); "Consent Compact" banned until the trademark filing is
+  confirmed; full journey ships with the PO's priority order in PLAN.md; account dump with byte
+  annotations kept in docs/RECEIPT-FORMAT.md as the privacy evidence.
+- Lock protocol implemented: scripts/build-lock.sh (refuses on /tmp/flair_health_gate.lock,
+  holds /tmp/consent_receipts_build.lock, removes it on any exit). Self-tested all four cases.
+  ALWAYS run anchor build/deploy through it from now on.
+- New: packages/anchor-client (IDL, PDA, anchorDigest); apps/relay (Hono; /health,
+  /session/challenge, /session/verify, /anchor; stateless HMAC sessions; per-wallet token
+  bucket; injected anchor fn so tests never touch devnet). 8 relay tests green.
+- Verified end to end on devnet with a throwaway ed25519 key through the running relay:
+  challenge → sign → token → POST /anchor 200 (tx 4kNgQD…nVMF, PDA 4ZThL1…EawD, slot
+  505553299) → repeat 409 → no session 401. Relay stdout contained one startup line and no
+  wallet, digest, or IP. CLI verifier passes 3/3 on that digest.
+- Flair bridge: item 774 on their side, ~1 day; example receipt JSON to arrive as data.
+- Next: brief 001 closes → step 1 brief (web app: wallet sign-in against these relay routes,
+  consent text signing, local receipt). Web verify panel and court view later (6b).

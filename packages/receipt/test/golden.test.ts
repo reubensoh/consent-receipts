@@ -46,7 +46,7 @@ describe("consent text", () => {
 `Consent receipt request
 Version: consent-receipt/0
 
-Service: consent-receipts (demo)
+Service: Flair Health consent receipts (prototype)
 Operator: Regal Pines Pte. Ltd.
 Operator key: 11111111111111111111111111111111
 Item: Documents/bloodwork.md
@@ -85,7 +85,7 @@ describe("receipt hash", () => {
     const shuffled = JSON.parse(JSON.stringify({ time: body.time, org: body.org, user: body.user,
       file: body.file, decision: body.decision, request: body.request, version: body.version }));
     expect(await receiptHash(shuffled)).toBe(h1);
-    expect(h1).toBe("3eccc33ead43235fdde3a73916368f0f7531910608c0786fc6bf3e503c700508");
+    expect(h1).toBe("b43cc8d3e5879b56124a19fb7e777b7d0d7177afa7742a40602d526980878ec0");
   });
   it("changes when any field changes", async () => {
     const h1 = await receiptHash(body);

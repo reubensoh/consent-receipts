@@ -6,7 +6,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { fromHex } from "@consent-receipts/receipt";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(here, "../..");
+const ROOT = path.resolve(here, "../../..");
 export const IDL = JSON.parse(
   fs.readFileSync(path.join(ROOT, "programs/consent_anchor/idl/consent_anchor.json"), "utf8"),
 ) as anchor.Idl;
@@ -42,3 +42,32 @@ export function signingProgram(connection: Connection, kp: Keypair) {
 
 export const solscanTx = (sig: string) => `https://solscan.io/tx/${sig}?cluster=devnet`;
 export const solscanAccount = (k: PublicKey) => `https://solscan.io/account/${k.toBase58()}?cluster=devnet`;
+
+export interface AnchorResult {
+  digest: string; org: string; pda: string; tx: string; slot: number | null; block_time: number | null;
+  solscan: string; solscan_account: string;
+}
+
+export class AlreadyAnchoredError extends Error {
+  constructor(public pda: string) { super(`already anchored at ${pda}`); }
+}
+
+/** Anchor a 32-byte digest with the org key paying. Throws AlreadyAnchoredError on a repeat. */
+export async function anchorDigest(connection: Connection, org: Keypair, hex: string): Promise<AnchorResult> {
+  const digest = parseDigest(hex);
+  const pda = receiptPda(digest);
+  const program = signingProgram(connection, org);
+  try {
+    const sig = await program.methods.anchorReceipt(Array.from(digest)).accounts({ org: org.publicKey }).rpc();
+    const tx = await connection.getTransaction(sig, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+    return {
+      digest: hex.toLowerCase(), org: org.publicKey.toBase58(), pda: pda.toBase58(), tx: sig,
+      slot: tx?.slot ?? null, block_time: tx?.blockTime ?? null,
+      solscan: solscanTx(sig), solscan_account: solscanAccount(pda),
+    };
+  } catch (e) {
+    const msg = String((e as Error).message ?? e);
+    if (/already in use|custom program error: 0x0\b/.test(msg)) throw new AlreadyAnchoredError(pda.toBase58());
+    throw e;
+  }
+}

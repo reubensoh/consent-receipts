@@ -9,7 +9,7 @@ what the user signs and what the receipt stores; the relay verifies against it b
 Consent receipt request
 Version: consent-receipt/0
 
-Service: consent-receipts (demo)
+Service: Flair Health consent receipts (prototype)
 Operator: Regal Pines Pte. Ltd.
 Operator key: <org pubkey base58>
 Item: Documents/bloodwork.md
@@ -51,7 +51,7 @@ which fills `user.consent_text` and `user.signature` with a `Decision: DECLINE` 
   "decision": "APPROVE",
   "file": { "sha256_client": "<hex>", "sha256_relay": "<hex or null on decline>", "size": 2113 },
   "user": { "pubkey": "<base58>", "consent_text": "<the exact text above, or null on decline>", "signature": "<base58 or null on decline>" },
-  "org": { "service": "consent-receipts (demo)", "operator": "Regal Pines Pte. Ltd.",
+  "org": { "service": "Flair Health consent receipts (prototype)", "operator": "Regal Pines Pte. Ltd.",
            "pubkey": "<base58>", "signature": "<base58 over receipt_hash>" },
   "time": { "issued_at": "...", "relay_signed_at": "..." },
   "receipt_hash": "<sha256 hex of canonical JSON of everything above except org.signature and anchor>",
@@ -73,5 +73,24 @@ send as one example JSON when the export exists. Until then the verifier has two
 
 ## What is on chain
 
-Only `receipt_hash` (32 bytes), the org pubkey as the signer/payer, and the slot. Never the
-user's pubkey, never the item name, never a hash of the file itself.
+Only `receipt_hash` (32 bytes), the org pubkey as the signer/payer, the slot, the unix time,
+and the PDA bump. Never the user's pubkey, never the item name, never a hash of the file itself.
+
+This is the fact the privacy line rests on, so here is the evidence. The first anchored account
+on devnet, dumped with `solana account 6niv3FxgfdbiSqiVwUfpYbKwGNdJr93orqnE6og9t7tC -u devnet`
+on 2026-09-29:
+
+```
+Owner: 72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh
+Length: 89 (0x59) bytes
+0000:   15 73 bb 26  52 4c 58 ab  | ba 78 16 bf  8f 01 cf ea   discriminator (8) | digest starts
+0010:   41 41 40 de  5d ae 22 23  b0 03 61 a3  96 17 7a 9c   digest (32) ...
+0020:   b4 10 ff 61  f2 00 15 ad  | 1f 62 3c d1  79 08 68 f5   ... digest ends | org pubkey starts
+0030:   06 22 6f ed  4b a4 36 cc  fe 53 4a 87  f2 6f be 02   org pubkey (32) ...
+0040:   74 2f eb ef  97 8b a8 75  | cd f5 21 1e  00 00 00 00   ... ends | slot (8, little-endian)
+0050:   07 ba bb 6a  00 00 00 00  | ff                       unix time (8, LE) | bump (1)
+```
+
+Bytes 8..40 are sha256("abc") = `ba7816bf…15ad`, the test digest. Bytes 40..72 are the org key
+`37WXBk…mr6G`. Slot 505542093 = `0x1E21F5CD` and unix time 1790687751 = `0x6ABBBA07`, both little-endian. Anyone can repeat this
+dump; the layout is fixed by `ReceiptAnchor` in `programs/consent_anchor/src/lib.rs`.

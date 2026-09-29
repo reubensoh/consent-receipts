@@ -48,17 +48,19 @@ consent-receipts/
     CLAIMS.md               allowed and forbidden wording
     DEMO-SCRIPT.md          the 5-minute talk (step 7)
   packages/receipt/         shared TS: canonical JSON, hashing, message text, verify()
+  packages/anchor-client/   Node TS: program IDL, PDA derivation, anchorDigest() (org key pays)
   apps/web/                 Vite + React + TS: sign-in, terminal, vault, consent sheet, receipt view
-  apps/relay/               Node 24 + TS (Hono): tool loop, provider key, co-sign, anchor, rate limit
+  apps/relay/               Node 24 + TS (Hono): sign-in, POST /anchor, rate limit; later tool loop, co-sign
   programs/consent_anchor/  Anchor 1.1.2 program: one PDA per receipt hash (or memo, TA decides)
-  scripts/                  verify-receipt CLI, devnet deploy, org keypair bootstrap
+  scripts/                  anchor-digest and verify-receipt CLIs, build-lock.sh (lock protocol)
   Anchor.toml  Cargo.toml  package.json (npm workspaces)  rust-toolchain.toml
 ```
 
 ## Bindings
 
 No token. Devnet only. No real funds, no escrow of user money. Receipt content never on chain,
-hash only. The user's wallet address never appears on chain per receipt and never in a URL.
+hash only. The user's wallet address never appears on chain per receipt and never in a URL;
+the byte-level evidence is the account dump in [docs/RECEIPT-FORMAT.md](docs/RECEIPT-FORMAT.md).
 Regal Pines Pte. Ltd. is the entrant and copyright holder; the PO is the sole submitter.
 Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org access is set.
 
@@ -66,7 +68,7 @@ Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org
 
 | What | Value |
 |---|---|
-| Organisation signing key (operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
+| Organisation signing key (Operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
 | consent_anchor program id (deployed 2026-09-29) | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
 | First anchored digest (sha256 of "abc", a test) | [tx on Solscan](https://solscan.io/tx/3v9np6vNam5n3tedeTKgZ8Y9L8cae5oVRk4RM4Lei6owzrgqRGUviVc9yubrFBukNJJ317rGDeemngArHP6uJGe7?cluster=devnet), PDA `6niv3FxgfdbiSqiVwUfpYbKwGNdJr93orqnE6og9t7tC` |
 
@@ -80,9 +82,15 @@ npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b0
 Anchoring a new digest needs the organisation keypair, which only the operator holds:
 `npm run anchor-digest -w scripts -- <64 hex>`.
 
+Relay (operator only): copy `apps/relay/.env.example` to `apps/relay/.env`, fill it, then
+`npm run dev -w apps/relay`. Routes: `GET /health`, `POST /session/challenge {pubkey}`,
+`POST /session/verify {pubkey, message, signature}` → `{token}`, `POST /anchor {digest}` with
+`Authorization: Bearer <token>`. The wallet address is never in a URL. Requests are not logged.
+
 ## Status
 
-Step 0 done. Step 2 partly done: program deployed to devnet, digest anchoring and digest-only
-verification work from the command line, duplicate anchoring is refused on chain. Not yet:
-relay endpoint, web verify panel, full-receipt verification (needs step 1 signatures).
+Step 0 done. Step 2 done except the web verify panel: program on devnet, digest anchoring
+and digest-only verification from the CLI and through the relay (sign-in, rate limit, 409 on
+repeat), all verified against devnet. Not yet: web app, full-receipt verification (needs step
+1 signatures), tool loop.
 Read [HANDOVER.md](HANDOVER.md).

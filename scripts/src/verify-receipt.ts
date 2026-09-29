@@ -8,7 +8,7 @@ import bs58 from "bs58";
 import nacl from "tweetnacl";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { receiptHash, utf8, type Receipt } from "@consent-receipts/receipt";
-import { RPC, parseDigest, receiptPda, readonlyProgram, solscanAccount } from "./chain.js";
+import { RPC, parseDigest, receiptPda, readonlyProgram, solscanAccount } from "@consent-receipts/anchor-client";
 
 type Check = { name: string; ok: boolean; detail: string };
 const checks: Check[] = [];

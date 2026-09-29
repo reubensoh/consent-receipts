@@ -107,7 +107,9 @@ step 4b.
 ## Stack
 
 - Web: Vite, React, TypeScript, `@solana/wallet-adapter` (Wallet Standard), WebCrypto, IndexedDB.
-- Relay: Node 24, TypeScript, Hono, `@solana/web3.js` 1.x + Anchor TS client (matches coursework).
+- Relay: Node 24, TypeScript, Hono, `@solana/web3.js` 1.x + Anchor TS client 0.32 (matches
+  coursework), chain access through `packages/anchor-client`. Sign-in: stateless HMAC challenge
+  and token (`apps/relay/src/session.ts`), one-hour sessions, nothing stored.
 - Program: Anchor 1.1.2, Rust 1.98 (matches `/Volumes/T7/solana/solana-fall-vault`).
 - Tests: Rust unit tests for the program, vitest for `packages/receipt`, a scripted end-to-end
   run against devnet before every "done".

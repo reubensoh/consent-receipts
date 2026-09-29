@@ -5,7 +5,7 @@
  * "keep a signed copy" after a decline (off by default). See docs/RECEIPT-FORMAT.md.
  */
 export const RECEIPT_VERSION = "consent-receipt/0";
-export const SERVICE_NAME = "consent-receipts (demo)";
+export const SERVICE_NAME = "Flair Health consent receipts (prototype)";
 export const OPERATOR_NAME = "Regal Pines Pte. Ltd.";
 
 export type Decision = "APPROVE" | "DECLINE";

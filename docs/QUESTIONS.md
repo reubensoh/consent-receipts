@@ -15,6 +15,12 @@ verification of step 0; I3 dates to follow; J1 payment is a roadmap slide, not a
 
 ## N. New, from the alignment
 
+**Answered 2026-09-29 (evening):** N1 operator line confirmed; N6 service line is "Flair Health
+consent receipts (prototype)", "Consent Compact" only after the trademark filing is confirmed;
+N2 ship the full journey with the priority order now in PLAN.md; N3 lock protocol implemented
+in `scripts/build-lock.sh`; N4 the exported-receipt bridge is Flair item 774, about a day, in
+the app's next build, example JSON to follow as data; brief 001 approved.
+
 - N1. **Operator line.** I changed the sheet to "Operator: Regal Pines Pte. Ltd." because the
   ruling said it moves with the copyright line. Philosopher to confirm, or tell me it stays a
   person's name.
