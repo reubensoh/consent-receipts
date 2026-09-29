@@ -17,8 +17,9 @@ Copy questions go to the philosopher via the PO. Legal questions go to the lawye
 - Sheet header, fixed (philosopher, 2026-09-29): "Service: Flair Health consent receipts
   (prototype). Operator: Regal Pines Pte. Ltd." The operator name matches the holder of the org
   signing key and the copyright line; all three move together. Flair Health may be named.
-- "Consent Compact" is a candidate name. It may appear NOWHERE until the PO confirms the
-  trademark filing. Until then, the descriptive service line above.
+- "Consent Compact" is a candidate name. It may appear NOWHERE until the PO confirms the IPOS
+  trademark filing (amendment ratified 2026-09-30; filing in progress). Until then, the
+  descriptive service line above.
 - The privacy line ("nothing identifying the user goes on chain") rests on the account dump in
   docs/RECEIPT-FORMAT.md. Keep it current if the account layout ever changes.
 - "anchored" for what the program does with a digest. Never "notarised".

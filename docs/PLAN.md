@@ -18,7 +18,7 @@ chat, never the sheet. Step 6b adds the "what a court would be shown" view.
 | Step | Target | What | Done means |
 |---|---|---|---|
 | 0 | Sep 30 | Bootstrap (DONE 09-29; engineer brief 001 verifies independently) | Repo pushed (after A1-A4). Workspaces build empty. `packages/receipt` has canonical JSON + SHA-256 + consent text builder with a golden vector test. Org keypair created and funded (C2). CI runs vitest and `cargo test`. |
-| 1 | Oct 6 | Wallet sign-in + signed consent + local receipt | In the browser: connect Phantom, SIWS sign-in, no address in any URL (checked in devtools). Click Approve on a hardcoded sheet, wallet shows the human-readable text, signature verifies in the browser, a receipt JSON renders with user sig and null org/anchor. Decline does the same with `DECLINE`. |
+| 1 | Oct 6 | Wallet sign-in + signed consent + local receipt | In the browser: connect Phantom, sign in against the relay's challenge/verify routes, no address in any URL (checked in devtools). Click Approve on a hardcoded sheet, wallet shows the human-readable consent text, signature verifies in the browser, a receipt JSON renders with user sig and null org/anchor. Decline is one tap, no wallet, and renders a `DECLINE` receipt with null user signature. |
 | 2 | Oct 3 | Devnet anchor + verifier + Solscan link (09-29: DONE except web panel; relay sign-in + POST /anchor verified end to end on devnet) | Program deployed to devnet. `scripts/anchor-digest <64 hex>` anchors any digest with the org key paying and prints tx, PDA, slot, Solscan link. Anchoring the same digest twice fails. `scripts/verify-receipt --digest <hex>` finds the PDA and prints slot and block time; `--receipt <json>` runs all five checks on a prototype receipt. Relay `POST /anchor` does the same for a signed-in wallet, rate-limited. |
 | 3 | Oct 8 | Vault | Three synthetic health files (lab report, scan JPEG, clinic letter) seeded, encrypted under a signature-derived key, listed with sizes and hashes. Reload the page, sign again, files decrypt. Change one byte of a file, hash changes. JPEG EXIF is stripped before hashing (shown by a before/after size). Key never appears in IndexedDB (inspected). |
 | 4a | Oct 10 | Tool-call path, mocked model | Relay runs a tool loop against a mock provider that always asks for one file. The real sheet renders with the real item and hash. Approve → wallet signs → relay checks sig, text, and byte hash → mock "answers" → receipt with both sigs and anchor lands. Relay logs contain no bytes, hashes, or addresses (grep the log). |
@@ -31,6 +31,9 @@ chat, never the sheet. Step 6b adds the "what a court would be shown" view.
 ## Per-step ritual (maker-checker)
 
 1. I write the brief: goal, done-criteria from the table, files to touch, what not to touch.
+   The engineer cannot see my chat. The brief file in docs/briefs/ is the record; it ends
+   with one fenced paste block per recipient, self-contained, that the PO copies verbatim to
+   that engineer's session. That block is the delivery.
 2. Engineer builds on a branch, opens a PR with a screen recording or terminal transcript.
 3. I run it myself from a clean checkout and tick each done-criterion against the running code.
 4. Bugs found are fixed before merge, by whoever is closest, immediately.

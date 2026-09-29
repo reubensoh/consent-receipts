@@ -81,3 +81,16 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
 - Flair bridge: item 774 on their side, ~1 day; example receipt JSON to arrive as data.
 - Next: brief 001 closes → step 1 brief (web app: wallet sign-in against these relay routes,
   consent text signing, local receipt). Web verify panel and court view later (6b).
+
+### 2026-09-30
+- Process rule from the PO: the engineer sees nothing unless relayed. Every brief file ends
+  with one fenced paste block per recipient, self-contained, in my voice; the PO copies it
+  verbatim. Added to PLAN.md ritual and memory. Brief 001 relayed by the PO; its paste block
+  appended to the file as the record.
+- Amendment to the ruling ratified: Flair Health's proof of concept under Regal Pines; code
+  separation stands; "Consent Compact" allowed only once the PO confirms the IPOS filing.
+- Brief 002 (step 1: wallet sign-in against the live relay routes, signed consent text, local
+  receipt, one-tap decline) drafted at docs/briefs/002-step1-wallet-consent.md with its paste
+  block. NOT issued; issue when 001 closes. Step 1 done-criteria in PLAN.md updated for the
+  unsigned decline.
+- Waiting on: brief 001 report PR; Phantom in the separate profile; Flair item 774 example JSON.
