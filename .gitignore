@@ -13,3 +13,6 @@ test-ledger/
 apps/relay/.keys/
 keys/
 !programs/**/keypair.example.json
+
+# Claude desktop session worktrees (engineer sessions); never part of the repo
+.claude/worktrees/
