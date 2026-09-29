@@ -94,3 +94,4 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
   block. NOT issued; issue when 001 closes. Step 1 done-criteria in PLAN.md updated for the
   unsigned decline.
 - Waiting on: brief 001 report PR; Phantom in the separate profile; Flair item 774 example JSON.
+- Slip and fix: `git add -A` swept the engineer's session worktree (.claude/worktrees/brief+001-verify-step0, branch brief/001-verify-step0) into commit 0cf462f as a gitlink and it was pushed. Removed from the index in 3a0ccf2 and `.claude/worktrees/` is now ignored. The worktree itself was not touched. Rule from now on: stage explicit paths, never `-A`. Engineer sessions run as worktrees on this same machine, so the "no anchor build" rule in briefs is literal.
