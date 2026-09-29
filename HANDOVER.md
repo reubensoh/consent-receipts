@@ -36,6 +36,8 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
   source written, NOT built (waiting on PO's answer about other builds on the machine);
   program keypair generated in target/deploy (gitignored), id 72NKbS…bbCh; org keypair at
   apps/relay/.keys/org.json (gitignored), pubkey 37WXBk…mr6G, funded with 1 devnet SOL from the
-  CLI wallet; CI workflow written but unverified until the first push.
+  CLI wallet; CI run 36523728700 green on both jobs (ts: typecheck, vitest, build; rust:
+  `cargo test -p consent_anchor` compiles the program on the runner). SBF build and devnet
+  deploy still pending build clearance on this machine.
 - Next: PO answers H3 → `anchor build` → `cargo test` → deploy to devnet → brief engineer on
   step 1.
