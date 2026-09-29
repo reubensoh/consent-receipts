@@ -10,7 +10,7 @@ Consent receipt request
 Version: consent-receipt/0
 
 Service: consent-receipts (demo)
-Operator: Reuben Soh
+Operator: Regal Pines Pte. Ltd.
 Operator key: <org pubkey base58>
 Item: Documents/bloodwork.md
 SHA-256: <64 hex>
@@ -51,7 +51,7 @@ which fills `user.consent_text` and `user.signature` with a `Decision: DECLINE` 
   "decision": "APPROVE",
   "file": { "sha256_client": "<hex>", "sha256_relay": "<hex or null on decline>", "size": 2113 },
   "user": { "pubkey": "<base58>", "consent_text": "<the exact text above, or null on decline>", "signature": "<base58 or null on decline>" },
-  "org": { "service": "consent-receipts (demo)", "operator": "Reuben Soh",
+  "org": { "service": "consent-receipts (demo)", "operator": "Regal Pines Pte. Ltd.",
            "pubkey": "<base58>", "signature": "<base58 over receipt_hash>" },
   "time": { "issued_at": "...", "relay_signed_at": "..." },
   "receipt_hash": "<sha256 hex of canonical JSON of everything above except org.signature and anchor>",
@@ -62,6 +62,14 @@ which fills `user.consent_text` and `user.signature` with a `Decision: DECLINE` 
 
 Canonical JSON: RFC 8785 (JCS) via a small shared function in `packages/receipt`. Both sides
 must produce identical bytes; the vitest suite pins a golden vector.
+
+## Exported receipts from the shipped app
+
+The app's receipts have their own canonical form and their own SHA-256 digest. This prototype
+does not re-canonicalise them. It accepts the digest as 32 bytes, anchors it, and verifies the
+anchor. Full signature verification of an exported receipt needs its schema, which the PO will
+send as one example JSON when the export exists. Until then the verifier has two modes:
+`verify --receipt <prototype.json>` (all checks) and `verify --digest <64 hex>` (anchor only).
 
 ## What is on chain
 

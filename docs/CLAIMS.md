@@ -14,15 +14,20 @@ Copy questions go to the philosopher via the PO. Legal questions go to the lawye
 - The sheet states OUR terms and CITES the provider's policy by date and link. It never quotes
   the provider's policy as our promise. (Philosopher ruling, 2026-09-29.)
 - "not kept on our side". Never "deleted": the provider has its own retention window.
-- Sheet header, fixed: "Service: consent-receipts (demo). Operator: Reuben Soh." The operator
-  name must match the holder of the org signing key and the copyright line; all three change
-  together if an entity is formed later.
+- Sheet header, fixed: "Service: consent-receipts (demo). Operator: Regal Pines Pte. Ltd."
+  The operator name must match the holder of the org signing key and the copyright line; all
+  three changed together on 2026-09-29 when the entity was named. (Philosopher to confirm the
+  operator line reads the entity, per their own ruling.)
+- "anchored" for what the program does with a digest. Never "notarised".
+- The "what a court would be shown" beat shows the artifacts an outsider can inspect: the
+  receipt, the two signatures, the digest, the devnet account, the slot and block time. It never
+  says what a court would decide.
 - A decline receipt is the service attesting "asked, refused, nothing sent". The organisation
   signs both outcomes; the user signs only consent.
 
 ## Never say
 
-- "legally binding", "legal proof", "court-admissible"
+- "legally binding", "legal proof", "court-admissible", "notarised", "notary"
 - "prevents hallucination", "makes AI safe", "private from the model", "zero-knowledge"
 - "the file never leaves your device" (it does, once, after consent; say that)
 - "on-chain receipt" (the **hash** is on chain; the receipt is not)

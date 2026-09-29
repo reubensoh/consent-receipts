@@ -2,6 +2,10 @@
 
 **Working title. Not a brand.** Any product name goes to the PO for a trademark check first.
 
+This repository is Flair Health's proof of concept. The Colosseum entrant is Regal Pines Pte. Ltd.
+Nothing from the shipped Flair Health app enters this repository; the only bridge is a receipt's
+canonical SHA-256 digest, which this prototype can anchor and verify (see "The bridge" below).
+
 A more private, more transparent way of sharing sensitive content (health records, code, art)
 with an AI online, with no accounts. Files stay in a client-side vault. When the model wants one,
 it has to ask. A consent sheet shows what the model needs and on what terms. The user approves or
@@ -10,9 +14,17 @@ Whatever is not on the sheet was not consented. The receipt is signed by the use
 organisation, and its hash is anchored on Solana devnet so the time and the terms can be proven
 later without the contents ever being public.
 
-What an outsider can check: the receipt is **signed, timestamped, verifiable**.
-What we never claim: that it is legally binding, that it prevents hallucination, or that it makes
-AI safe. See [docs/CLAIMS.md](docs/CLAIMS.md).
+What an outsider can check: the receipt is **signed, timestamped, verifiable**, and its digest is
+**anchored** on devnet. What we never claim: that it is legally binding or notarised, that it
+prevents hallucination, or that it makes AI safe. See [docs/CLAIMS.md](docs/CLAIMS.md).
+
+## The bridge
+
+The shipped app mints consent receipts with a canonical SHA-256 digest and an Ed25519 user
+signature. The anchor program and the verifier take **any 32-byte digest** as input, not only
+receipts minted by this prototype. Demo Day shows the real app's consent sheet and receipt in a
+recording, then this prototype anchoring that receipt's digest on devnet with the organisation
+key paying the fee, the Solscan verification, and finally what a court would be shown.
 
 ## Threat model, in one line
 
@@ -25,7 +37,7 @@ elsewhere.
 ```
 consent-receipts/
   README.md                 this file
-  LICENSE, NOTICE           Apache-2.0, Copyright 2026 Reuben Soh
+  LICENSE, NOTICE           Apache-2.0, Copyright 2026 Regal Pines Pte. Ltd.
   ROADMAP.md                out of Demo Day scope, deliberately
   HANDOVER.md               the scroll a fresh session reads first
   docs/
@@ -47,13 +59,14 @@ consent-receipts/
 
 No token. Devnet only. No real funds, no escrow of user money. Receipt content never on chain,
 hash only. The user's wallet address never appears on chain per receipt and never in a URL.
-The PO is the sole, individual submitter and owns the code. Apache-2.0.
+Regal Pines Pte. Ltd. is the entrant and copyright holder; the PO is the sole submitter.
+Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org access is set.
 
 ## Public identifiers (devnet)
 
 | What | Value |
 |---|---|
-| Organisation signing key (operator: Reuben Soh) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
+| Organisation signing key (operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
 | consent_anchor program id | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` (not yet deployed) |
 
 ## Status

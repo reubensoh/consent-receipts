@@ -1,10 +1,37 @@
 # Questions the PO must answer before an engineer starts
 
-**Answered 2026-09-29:** A1-A4 (consent-receipts, public, "Copyright 2026 Reuben Soh", go),
-B1 (Claude API), B3 (our terms, cite policy by date and link, lawyer approves), C1 (PDA, memo
-only as time fallback), F1 (Service: consent-receipts (demo). Operator: Reuben Soh.), F4 (no
-wallet signature on decline; org signs both outcomes). Everything else below is still open;
-defaults apply until you say otherwise.
+**Answered 2026-09-29 (morning):** A1-A4 (consent-receipts, public, go), B3 (our terms, cite
+policy by date and link, lawyer approves), C1 (PDA, memo only as time fallback), F4 (no wallet
+signature on decline; org signs both outcomes).
+
+**Answered 2026-09-29 (philosopher alignment):** identity is Flair Health's proof of concept,
+entrant Regal Pines Pte. Ltd., NOTICE "Copyright 2026 Regal Pines Pte. Ltd.", repo to move to
+`flairhealth-oss`; F1 operator line therefore "Regal Pines Pte. Ltd." (per the earlier ruling
+that operator, key holder, and copyright line move together; see N1); E1 three synthetic
+health files (lab report, scan image, clinic letter); B1/B2 OpenAI, mini-class model, PO's
+spend-capped key, thin one-file adapter; H3 build clearance via the lock protocol; D1 Phantom in
+a separate profile, PO confirms when installed; I1 one engineer, first brief is an independent
+verification of step 0; I3 dates to follow; J1 payment is a roadmap slide, not a beat.
+
+## N. New, from the alignment
+
+- N1. **Operator line.** I changed the sheet to "Operator: Regal Pines Pte. Ltd." because the
+  ruling said it moves with the copyright line. Philosopher to confirm, or tell me it stays a
+  person's name.
+- N2. **Prototype scope.** The demo beats now open with a recording of the real app's sheet and
+  receipt. Does the prototype still ship its own terminal, vault, and model tool-call path
+  (steps 1, 3, 4, 5), or is Demo Day now: anchor program + relay anchor endpoint + verifier +
+  "court view" page, fed by exported receipts? *My default until told: both. Anchor and verifier
+  first (they serve both readings), prototype journey after, cut the journey if time runs out.*
+- N3. **Lock protocol.** What is it, concretely: a file path, a command, a message? I need it
+  before the next `anchor build`.
+- N4. **Exported receipt example.** When it exists, send one JSON as data. The verifier's
+  full-check mode for exported receipts waits on its schema; digest-only mode does not.
+- N5. **Repo transfer.** After the move to `flairhealth-oss`, I update the remote and the README
+  link. Tell me when.
+- N6. **Service line.** Stays "Service: consent-receipts (demo)", or becomes something naming
+  Flair Health? Public text; philosopher.
+
 
 Grouped. Each has my recommended default in *italics*; say "default" to accept it. Items marked
 **(philosopher)** or **(lawyer)** need a relay through the PO before the answer is final.
@@ -21,8 +48,7 @@ Grouped. Each has my recommended default in *italics*; say "default" to accept i
 
 ## B. Provider and key **(lawyer for B3)**
 
-- B1. Which provider? *Default: Claude API (Anthropic): native tool use, API inputs not used for
-  training by default.* Alternatives with the same default policy exist; say if you prefer one.
+- B1. Which provider? **Answered: OpenAI.** The sheet cites OpenAI's API data-usage policy by date and link.
 - B2. Which model, and a monthly spend cap on the key? *Default: a current Sonnet-class model,
   cap set in the provider console.*
 - B3. The sheet will quote and link the provider's published policy on training and retention.

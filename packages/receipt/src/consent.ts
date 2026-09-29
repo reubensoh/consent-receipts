@@ -6,7 +6,7 @@
  */
 export const RECEIPT_VERSION = "consent-receipt/0";
 export const SERVICE_NAME = "consent-receipts (demo)";
-export const OPERATOR_NAME = "Reuben Soh";
+export const OPERATOR_NAME = "Regal Pines Pte. Ltd.";
 
 export type Decision = "APPROVE" | "DECLINE";
 
@@ -16,7 +16,7 @@ export interface ConsentRequest {
   sha256: string;        // 64 hex, computed client-side after metadata strip
   size: number;          // bytes, after strip
   purpose: string;       // the model's stated purpose, <= 140 chars, shown verbatim
-  provider: string;      // "Anthropic"
+  provider: string;      // "OpenAI"
   model: string;         // model id
   terms: string[];       // our terms, one line each, lawyer-approved
   issuedAt: string;      // ISO 8601 UTC, seconds precision

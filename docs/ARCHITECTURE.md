@@ -21,7 +21,9 @@
 
 ### 2. Vault
 
-- One folder, "Documents", three synthetic files seeded on first sign-in (never real PII).
+- One folder, "Documents", three synthetic health files seeded on first sign-in (never a real
+  person's data): a lab report (markdown), a scan image (JPEG with EXIF, so the strip shows),
+  and a clinic letter (text).
 - Key: `signMessage` over a fixed domain message ("Unlock vault ... v1") → HKDF-SHA256 →
   AES-256-GCM key, kept in memory only. Ed25519 signatures are deterministic per RFC 8032; verify
   this holds for the chosen wallet on step 3 before relying on it.
@@ -72,9 +74,11 @@ the browser posts the transcript back with the consent. This keeps the relay sta
 
 ### 5. Verification (what an outsider inspects)
 
-`scripts/verify-receipt <receipt.json>` and a "Verify" panel in the web app, both using
-`packages/receipt.verify()`:
-1. canonicalise the receipt body, recompute `receipt_hash`
+`scripts/verify-receipt --receipt <receipt.json>` and a "Verify" panel in the web app, both
+using `packages/receipt.verify()`. `--digest <64 hex>` runs step 4 alone for an exported
+receipt from the shipped app (README, "The bridge"). Relay endpoint `POST /anchor {digest}`
+anchors any 32-byte digest for a signed-in wallet, org key paying, rate-limited per wallet.
+1. canonicalise the receipt body, recompute `receipt_hash` (prototype receipts only)
 2. verify the user signature over the consent text with the user pubkey in the receipt
 3. verify the org signature over `receipt_hash` with the org pubkey
 4. fetch the PDA (or tx) on devnet, compare hash, read slot and block time
@@ -83,7 +87,10 @@ the browser posts the transcript back with the consent. This keeps the relay sta
 ## Provider
 
 Must honor "not used for training" by default under its published API terms, or the sheet lies.
-Decided: the Claude API (Anthropic), native tool use. The sheet states our terms and cites the
+Decided (PO, 2026-09-29): OpenAI, a mini-class model, key on the PO's personal account with a
+spend cap, placed in the relay's env file by the PO. The provider adapter is one thin file
+(`apps/relay/src/provider.ts`) exposing `chat(messages, tools) -> {text | toolCall}` so the
+provider can be swapped without touching the tool loop. The sheet states our terms and cites the
 provider's policy by date and link; it never quotes the policy as our promise. Retention is the
 provider's own window; we say "not kept on our side", never "deleted". The lawyer approves the
 final wording before step 4b (QUESTIONS B3). The API key lives in

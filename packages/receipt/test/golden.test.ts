@@ -12,8 +12,8 @@ const request = {
   sha256: "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
   size: 2113,
   purpose: "compare values to reference ranges",
-  provider: "Anthropic",
-  model: "claude-sonnet-5",
+  provider: "OpenAI",
+  model: "gpt-mini-placeholder",
   terms: [
     "used only to answer this conversation",
     "sent once to the provider named above, not kept on our side",
@@ -47,14 +47,14 @@ describe("consent text", () => {
 Version: consent-receipt/0
 
 Service: consent-receipts (demo)
-Operator: Reuben Soh
+Operator: Regal Pines Pte. Ltd.
 Operator key: 11111111111111111111111111111111
 Item: Documents/bloodwork.md
 SHA-256: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 Size: 2,113 bytes
 Purpose: compare values to reference ranges
-Provider: Anthropic
-Model: claude-sonnet-5
+Provider: OpenAI
+Model: gpt-mini-placeholder
 Terms (ours):
   - used only to answer this conversation
   - sent once to the provider named above, not kept on our side
@@ -85,7 +85,7 @@ describe("receipt hash", () => {
     const shuffled = JSON.parse(JSON.stringify({ time: body.time, org: body.org, user: body.user,
       file: body.file, decision: body.decision, request: body.request, version: body.version }));
     expect(await receiptHash(shuffled)).toBe(h1);
-    expect(h1).toBe("3206341eccd55db0303fb5b52a6a0c6d16621576201ff02f9e284d867840c931");
+    expect(h1).toBe("3eccc33ead43235fdde3a73916368f0f7531910608c0786fc6bf3e503c700508");
   });
   it("changes when any field changes", async () => {
     const h1 = await receiptHash(body);
