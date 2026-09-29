@@ -28,8 +28,9 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
 ### 2026-09-29
 - PO answered the five gating questions (see docs/QUESTIONS.md header). Rulings applied to
   CLAIMS, RECEIPT-FORMAT, ARCHITECTURE. Decline is NOT wallet-signed; org signs both outcomes.
-- `git init` done, LICENSE + NOTICE added. **Push blocked:** `gh` is not installed and there is
-  no remote. PO must create the empty public repo `consent-receipts` or install and sign in `gh`.
+- `git init` done, LICENSE + NOTICE added. PO created github.com/reubensoh/consent-receipts;
+  pushed `main` over HTTPS (keychain credential). `gh` is not installed; use the REST API with
+  curl to read CI status. First CI run: actions/runs/36523728700.
 - Step 0: root npm workspaces; `packages/receipt` (canonical JSON, sha256, consent text builder,
   receipt hash) with 7 passing vitest tests and a pinned golden hash; `programs/consent_anchor`
   source written, NOT built (waiting on PO's answer about other builds on the machine);
