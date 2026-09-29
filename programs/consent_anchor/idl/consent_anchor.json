@@ -42,6 +42,10 @@
                 ]
               },
               {
+                "kind": "account",
+                "path": "org"
+              },
+              {
                 "kind": "arg",
                 "path": "receipt_hash"
               }
@@ -89,21 +93,6 @@
       ]
     }
   ],
-  "events": [
-    {
-      "name": "ReceiptAnchored",
-      "discriminator": [
-        72,
-        237,
-        204,
-        175,
-        136,
-        188,
-        9,
-        203
-      ]
-    }
-  ],
   "types": [
     {
       "name": "ReceiptAnchor",
@@ -134,35 +123,6 @@
           {
             "name": "bump",
             "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "ReceiptAnchored",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "receipt_hash",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "org",
-            "type": "pubkey"
-          },
-          {
-            "name": "slot",
-            "type": "u64"
-          },
-          {
-            "name": "unix_time",
-            "type": "i64"
           }
         ]
       }

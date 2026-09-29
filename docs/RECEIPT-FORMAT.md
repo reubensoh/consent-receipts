@@ -75,10 +75,12 @@ send as one example JSON when the export exists. Until then the verifier has two
 
 Only `receipt_hash` (32 bytes), the org pubkey as the signer/payer, the slot, the unix time,
 and the PDA bump. Never the user's pubkey, never the item name, never a hash of the file itself.
+The account address is the PDA of `["receipt", org, receipt_hash]`, so the org key is in the
+address as well as in the data.
 
-This is the fact the privacy line rests on, so here is the evidence. The first anchored account
-on devnet, dumped with `solana account 6niv3FxgfdbiSqiVwUfpYbKwGNdJr93orqnE6og9t7tC -u devnet`
-on 2026-09-29:
+This is the fact the privacy line rests on, so here is the evidence. The test digest's anchor
+account on devnet under the org-scoped seeds, dumped with
+`solana account FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n -u devnet` on 2026-09-29:
 
 ```
 Owner: 72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh
@@ -87,10 +89,12 @@ Length: 89 (0x59) bytes
 0010:   41 41 40 de  5d ae 22 23  b0 03 61 a3  96 17 7a 9c   digest (32) ...
 0020:   b4 10 ff 61  f2 00 15 ad  | 1f 62 3c d1  79 08 68 f5   ... digest ends | org pubkey starts
 0030:   06 22 6f ed  4b a4 36 cc  fe 53 4a 87  f2 6f be 02   org pubkey (32) ...
-0040:   74 2f eb ef  97 8b a8 75  | cd f5 21 1e  00 00 00 00   ... ends | slot (8, little-endian)
-0050:   07 ba bb 6a  00 00 00 00  | ff                       unix time (8, LE) | bump (1)
+0040:   74 2f eb ef  97 8b a8 75  | 54 84 22 1e  00 00 00 00   ... ends | slot (8, little-endian)
+0050:   e2 da bb 6a  00 00 00 00  | fc                       unix time (8, LE) | bump (1)
 ```
 
 Bytes 8..40 are sha256("abc") = `ba7816bf…15ad`, the test digest. Bytes 40..72 are the org key
-`37WXBk…mr6G`. Slot 505542093 = `0x1E21F5CD` and unix time 1790687751 = `0x6ABBBA07`, both little-endian. Anyone can repeat this
-dump; the layout is fixed by `ReceiptAnchor` in `programs/consent_anchor/src/lib.rs`.
+`37WXBk…mr6G`. Slot 505578580 = `0x1E228454` and unix time 1790696163 = `0x6ABBDAE3`, both
+little-endian. The address itself is derived from `["receipt", org, digest]`. Anyone can repeat
+this dump; the layout is fixed by `ReceiptAnchor` in `programs/consent_anchor/src/lib.rs`.
+(An earlier account, `6niv3F…t7tC`, was created under the pre-scoping seeds and is superseded.)

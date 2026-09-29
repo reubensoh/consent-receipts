@@ -16,7 +16,7 @@ export interface ReceiptBody {
 
 export interface Receipt extends ReceiptBody {
   receipt_hash: string;
-  org_signature: string;                // base58 ed25519 over utf8(receipt_hash hex)
+  org_signature: string | null;         // base58 ed25519 over utf8(receipt_hash hex); null before the relay co-signs (step 1)
   anchor: {
     cluster: "devnet"; program: string; pda: string; tx: string; slot: number;
     block_time: number; solscan: string;

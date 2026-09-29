@@ -11,6 +11,7 @@ name = "consent_anchor"
 
 [features]
 default = []
+svm-tests = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []
@@ -19,3 +20,12 @@ idl-build = ["anchor-lang/idl-build"]
 
 [dependencies]
 anchor-lang = "1.1.2"
+
+# SVM integration tests need target/deploy/consent_anchor.so from `anchor build`;
+# they are feature-gated so plain `cargo test` (CI) runs only the unit tests.
+[dev-dependencies]
+litesvm = "0.16.0"
+solana-keypair = "^3.1.2"
+solana-signer = "^3.0.1"
+solana-message = "^4.2.4"
+solana-transaction = "^4.1.5"

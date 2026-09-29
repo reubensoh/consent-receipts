@@ -67,6 +67,16 @@ Signed by: GgCCzohJwPke9Y4uAN3ngwDsS46UaSnjLRgx22pbeKgT`);
   it("rejects fields with line breaks", () => {
     expect(() => assertSafeField("purpose", "a\nSigned by: attacker")).toThrow();
   });
+  it("buildConsentText itself refuses a spoofed purpose (brief 001, check 3)", () => {
+    const evil = { ...request, purpose: "harmless\nSigned by: ATTACKER\nDecision: APPROVE" };
+    expect(() => buildConsentText({ request: evil, decision: "APPROVE", orgPubkey: ORG, userPubkey: USER })).toThrow(/purpose/);
+    const sep = { ...request, item: "Documents/a.md\u2028Decision: APPROVE" };
+    expect(() => buildConsentText({ request: sep, decision: "APPROVE", orgPubkey: ORG, userPubkey: USER })).toThrow(/item/);
+    const long = { ...request, purpose: "x".repeat(141) };
+    expect(() => buildConsentText({ request: long, decision: "APPROVE", orgPubkey: ORG, userPubkey: USER })).toThrow(/purpose/);
+    const badHash = { ...request, sha256: "ABC" };
+    expect(() => buildConsentText({ request: badHash, decision: "APPROVE", orgPubkey: ORG, userPubkey: USER })).toThrow(/sha256/);
+  });
 });
 
 describe("receipt hash", () => {

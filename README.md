@@ -69,14 +69,21 @@ Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org
 | What | Value |
 |---|---|
 | Organisation signing key (Operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
-| consent_anchor program id (deployed 2026-09-29) | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
-| First anchored digest (sha256 of "abc", a test) | [tx on Solscan](https://solscan.io/tx/3v9np6vNam5n3tedeTKgZ8Y9L8cae5oVRk4RM4Lei6owzrgqRGUviVc9yubrFBukNJJ317rGDeemngArHP6uJGe7?cluster=devnet), PDA `6niv3FxgfdbiSqiVwUfpYbKwGNdJr93orqnE6og9t7tC` |
+| consent_anchor program id (deployed 2026-09-29, upgraded in place the same day for org-scoped seeds) | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
+| Test digest anchored under the org-scoped seeds (sha256 of "abc") | [tx on Solscan](https://solscan.io/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet), PDA `FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n` |
 
 ## Try it (devnet)
 
 ```bash
 npm ci && npm run build
 npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+```
+
+That checks the operator's slot for the digest. To check another organisation's slot, add
+`--org <pubkey>`. For a full prototype receipt:
+
+```bash
+npm run verify-receipt -w scripts -- --receipt path/to/receipt.json
 ```
 
 Anchoring a new digest needs the organisation keypair, which only the operator holds:

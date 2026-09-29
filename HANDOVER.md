@@ -95,3 +95,31 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
   unsigned decline.
 - Waiting on: brief 001 report PR; Phantom in the separate profile; Flair item 774 example JSON.
 - Slip and fix: `git add -A` swept the engineer's session worktree (.claude/worktrees/brief+001-verify-step0, branch brief/001-verify-step0) into commit 0cf462f as a gitlink and it was pushed. Removed from the index in 3a0ccf2 and `.claude/worktrees/` is now ignored. The worktree itself was not touched. Rule from now on: stage explicit paths, never `-A`. Engineer sessions run as worktrees on this same machine, so the "no anchor build" rule in briefs is literal.
+
+### 2026-09-30 (brief 001 closed)
+- Engineer 1's report merged as PR #1 (a6101ff). I reproduced check 3 (spoof) myself; agreed
+  with check 5 (unscoped PDA) and check 6 (`receipt.verify()` did not exist). All three fixed:
+  - `buildConsentText` now validates every field itself (control and invisible chars, line
+    separators, lengths, hex, uuid, ISO time, base58) and throws; tests cover the spoof.
+  - Program PDA seeds are `["receipt", org, receipt_hash]`. Rust unit tests (size, seed
+    scoping) run in CI; LiteSVM tests behind `--features svm-tests` (anchor once per org,
+    stranger cannot squat, unsigned org rejected, 89-byte layout) run locally after the build.
+    Dev-deps pinned to LiteSVM 0.16's ranges (keypair/signer major 3). The `emit!` event was
+    removed to keep the binary ≤ 130672 bytes: devnet rejected every program-extend attempt
+    (CLI auto-extend, `solana program extend`, and a raw legacy ExtendProgram instruction all
+    return "invalid program argument"; the ExtendProgramChecked feature is inactive there).
+    Upgraded in place at the same program id, slot 505578496.
+  - `verifyReceiptOffline()` in packages/receipt (hash, both signatures, text-binding checks,
+    decline rules; browser-safe), `fetchAnchor()` and `DEFAULT_ORG_PUBKEY` in
+    packages/anchor-client; `verify-receipt` rewritten on top of them with `--org`.
+  - `org_signature` is nullable for step-1 receipts.
+- Verified on devnet after the upgrade: anchor-digest under new seeds (tx xj4r3H…i7fH, PDA
+  FfdETr…Ey1n, slot 505578580); repeat exits 3; verify --digest 4/4 incl. org match; wrong
+  --org fails; relay e2e (sign-in, POST /anchor 200, 409, 401, one log line) on PDA 6uJ49P…1jGz.
+  New account dump in RECEIPT-FORMAT.md; old account 6niv3F…t7tC superseded.
+- Known: on-chain IDL upgrade fails ("Failed to upgrade IDL", both via deploy and
+  `anchor idl upgrade`); the on-chain IDL is the pre-scoping one. Clients use the committed
+  IDL copy, so nothing depends on it; Solscan instruction decoding may lag. Low priority.
+- `gh` is installed and authenticated (engineer's note); memory updated.
+- Brief 002 revised for these fixes and ISSUED (paste block in the file).
+- Wallet: ~6.72 devnet SOL after buffer recovery.

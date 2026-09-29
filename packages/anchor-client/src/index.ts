@@ -25,8 +25,28 @@ export function parseDigest(hex: string): Uint8Array {
   return d;
 }
 
-export function receiptPda(digest: Uint8Array): PublicKey {
-  return PublicKey.findProgramAddressSync([Buffer.from("receipt"), Buffer.from(digest)], PROGRAM_ID)[0];
+/** The operator's published organisation key (README, "Public identifiers"). */
+export const DEFAULT_ORG_PUBKEY = new PublicKey("37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G");
+
+/** PDA seeds are ["receipt", org, digest]: one slot per organisation per digest. */
+export function receiptPda(org: PublicKey, digest: Uint8Array): PublicKey {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("receipt"), org.toBuffer(), Buffer.from(digest)], PROGRAM_ID)[0];
+}
+
+export interface OnChainAnchor { pda: string; org: string; slot: number; unix_time: number; receipt_hash: string }
+
+/** Read the anchor for (org, digest). Returns null if that organisation never anchored it. */
+export async function fetchAnchor(connection: Connection, org: PublicKey, hex: string): Promise<OnChainAnchor | null> {
+  const digest = parseDigest(hex);
+  const pda = receiptPda(org, digest);
+  const program = readonlyProgram(connection);
+  try {
+    const a = await (program.account as any).receiptAnchor.fetch(pda) as
+      { receiptHash: number[]; org: PublicKey; slot: { toString(): string }; unixTime: { toString(): string } };
+    return { pda: pda.toBase58(), org: a.org.toBase58(), slot: Number(a.slot.toString()),
+      unix_time: Number(a.unixTime.toString()), receipt_hash: Buffer.from(a.receiptHash).toString("hex") };
+  } catch { return null; }
 }
 
 /** Read-only program handle (no signer). */
@@ -55,7 +75,7 @@ export class AlreadyAnchoredError extends Error {
 /** Anchor a 32-byte digest with the org key paying. Throws AlreadyAnchoredError on a repeat. */
 export async function anchorDigest(connection: Connection, org: Keypair, hex: string): Promise<AnchorResult> {
   const digest = parseDigest(hex);
-  const pda = receiptPda(digest);
+  const pda = receiptPda(org.publicKey, digest);
   const program = signingProgram(connection, org);
   try {
     const sig = await program.methods.anchorReceipt(Array.from(digest)).accounts({ org: org.publicKey }).rpc();

@@ -64,9 +64,15 @@ the browser posts the transcript back with the consent. This keeps the relay sta
 ### 4. Anchor
 
 - Decided (PO, 2026-09-29): PDA per receipt. Memo only as a time fallback.
-- Option A: PDA with seeds `["receipt", receipt_hash]`, storing
-  `{org: Pubkey, slot: u64, unix_time: i64}`. Creating the PDA twice fails, which proves
-  uniqueness. Solscan shows an account plus the creating tx.
+- Option A (built): PDA with seeds `["receipt", org, receipt_hash]`, storing
+  `{receipt_hash, org: Pubkey, slot: u64, unix_time: i64, bump}`. The org key is in the seed
+  (brief 001, check 5): a digest gets one slot per organisation, so a stranger who learns a
+  digest cannot occupy the operator's slot for it. Creating the same PDA twice fails, which
+  proves uniqueness per organisation. Solscan shows an account plus the creating tx.
+- The program does not pin a single org key. Any funded key can anchor under its own slot.
+  Trust in *which* org anchored is established by the verifier comparing the account's org
+  against the org named in the receipt (bound by the org signature) or, in digest-only mode,
+  against the operator's published key.
 - Option B: SPL Memo instruction carrying the hex hash. Cheaper to build, nothing to query by
   hash without an indexer. Solscan shows the tx only.
 - The org key pays. Rent for ~60 bytes is ~0.0013 SOL. The existing CLI wallet holds ~8.4 devnet
@@ -74,15 +80,24 @@ the browser posts the transcript back with the consent. This keeps the relay sta
 
 ### 5. Verification (what an outsider inspects)
 
-`scripts/verify-receipt --receipt <receipt.json>` and a "Verify" panel in the web app, both
-using `packages/receipt.verify()`. `--digest <64 hex>` runs step 4 alone for an exported
-receipt from the shipped app (README, "The bridge"). Relay endpoint `POST /anchor {digest}`
-anchors any 32-byte digest for a signed-in wallet, org key paying, rate-limited per wallet.
+`scripts/verify-receipt --receipt <receipt.json>` and, later, a "Verify" panel in the web app,
+both using `verifyReceiptOffline()` from `packages/receipt` (hash, both signatures, internal
+consistency; runs in Node and the browser) plus `fetchAnchor()` from `packages/anchor-client`
+(the on-chain read). `--digest <64 hex> [--org <pubkey>]` runs the on-chain read alone for an
+exported receipt from the shipped app (README, "The bridge"); `--org` defaults to the
+operator's published key. Relay endpoint `POST /anchor {digest}` anchors any 32-byte digest
+for a signed-in wallet, org key paying, rate-limited per wallet.
 1. canonicalise the receipt body, recompute `receipt_hash` (prototype receipts only)
-2. verify the user signature over the consent text with the user pubkey in the receipt
+2. verify the user signature over the consent text with the user pubkey in the receipt, and
+   that the text names that user, this request id, the file hash, and `Decision: APPROVE`
 3. verify the org signature over `receipt_hash` with the org pubkey
-4. fetch the PDA (or tx) on devnet, compare hash, read slot and block time
+4. fetch the PDA for (org, hash) on devnet; compare hash and org; read slot and block time
 5. print PASS/FAIL per check. Never prints "legally binding".
+
+Consent text safety: `buildConsentText` validates every field before building (no control or
+invisible characters, no line separators, length caps, hex, uuid, ISO time, base58) and throws
+otherwise, so no call site can produce a text with a second `Signed by:` or `Decision:` line
+(brief 001, check 3).
 
 ## Provider
 
@@ -111,5 +126,7 @@ step 4b.
   coursework), chain access through `packages/anchor-client`. Sign-in: stateless HMAC challenge
   and token (`apps/relay/src/session.ts`), one-hour sessions, nothing stored.
 - Program: Anchor 1.1.2, Rust 1.98 (matches `/Volumes/T7/solana/solana-fall-vault`).
-- Tests: Rust unit tests for the program, vitest for `packages/receipt`, a scripted end-to-end
-  run against devnet before every "done".
+- Tests: Rust unit tests for the program (`cargo test`, run by CI) plus LiteSVM integration
+  tests behind `--features svm-tests` (need the built `.so`; run locally after
+  `scripts/build-lock.sh anchor build`), vitest for `packages/receipt` and `apps/relay`, a
+  scripted end-to-end run against devnet before every "done".

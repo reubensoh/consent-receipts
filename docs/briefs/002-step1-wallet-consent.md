@@ -1,6 +1,6 @@
 # Brief 002: step 1, wallet sign-in, signed consent, local receipt
 
-**Status: DRAFT, not issued. Issue only after brief 001 is closed (one brief per engineer).**
+**Status: ISSUED 2026-09-30, after brief 001 closed (report merged as reubensoh/consent-receipts#1).**
 
 To: engineer 1. From: architect.
 
@@ -26,18 +26,22 @@ model, no org signature, no anchor yet.
    a purpose, provider OpenAI, model placeholder, the terms lines from docs/RECEIPT-FORMAT.md)
    rendered as OUR sheet with the header "Service: Flair Health consent receipts (prototype).
    Operator: Regal Pines Pte. Ltd." and every field the wallet will show. Build the text with
-   `buildConsentText` from `@consent-receipts/receipt`; call `assertSafeField` on every
-   free-text field before building. Show the exact text that will be signed in a collapsible
-   "what you will sign" block.
-4. Approve: `signMessage` over that text. Verify the signature in the browser with tweetnacl
-   against the connected pubkey before showing anything green. Render the receipt JSON from
+   `buildConsentText` from `@consent-receipts/receipt`. It validates every field itself and
+   throws on anything that could split or impersonate a line (fix from brief 001, check 3);
+   the sheet must catch that throw and refuse to render, never show a partial sheet. Show the
+   exact text that will be signed in a collapsible "what you will sign" block.
+4. Approve: `signMessage` over that text. Before showing anything green, run
+   `verifyReceiptOffline` from `@consent-receipts/receipt` on the receipt you built and show
+   its checks; in step 1 exactly one check fails, "org signature over receipt_hash", and the
+   screen must say so plainly ("not yet co-signed by the operator"). Render the receipt JSON from
    docs/RECEIPT-FORMAT.md with `decision: "APPROVE"`, `user.signature` filled, `org_signature`
    and `anchor` null, `receipt_hash` computed with `receiptHash`. Offer "Download receipt".
 5. Decline: one tap, no wallet dialog. Render a `DECLINE` receipt with `user.consent_text` and
    `user.signature` null and `file.sha256_relay` null. The screen says "asked, refused, nothing
    sent". No "keep a signed copy" option yet.
-6. `packages/receipt`: make `org_signature: string | null` and add a test that a step-1 receipt
-   (org and anchor null) hashes deterministically. Keep the existing golden test green.
+6. `packages/receipt` is already updated for step 1: `org_signature` is nullable and
+   `verifyReceiptOffline` exists with tests. Do not change the package; report if it lacks
+   something.
 7. Copy discipline: use only wording from docs/CLAIMS.md. "signed", "anchored", "verifiable".
    Never "legally binding", "notarised", "deleted", "Consent Compact".
 8. A screen recording (or 6 screenshots) in the PR: connect, sign-in dialog, sheet, wallet
@@ -49,7 +53,6 @@ model, no org signature, no anchor yet.
   `@solana/wallet-adapter-react-ui`, `@solana/wallet-adapter-wallets` (Phantom, Solflare),
   `@solana/web3.js` 1.x, `tweetnacl`, `bs58`, `@consent-receipts/receipt`. Add `apps/web` to
   the root `typecheck`/`test`/`build` chain (root package.json already globs `apps/*`).
-- `packages/receipt/src/receipt.ts` and its test, for item 6 only.
 - Do not touch `apps/relay`, `packages/anchor-client`, `programs/`, `scripts/`. If the relay
   needs a CORS header for the Vite origin, say so in the PR and I will add it (or add
   `hono/cors` for `http://localhost:5173` only, in one commit, clearly labelled).
@@ -73,6 +76,11 @@ never the PO's. `npm run dev -w apps/relay` listens on :8787.
 ~~~
 Brief 002 from the architect: step 1, wallet sign-in, signed consent, local receipt.
 
+First, brief 001 is closed: your report is merged as PR #1. All six checks were what I needed.
+Your check 3 and check 5 findings are fixed on main (buildConsentText now validates every
+field; the PDA seed is scoped by org key, with Rust tests) and ARCHITECTURE.md's
+"receipt.verify()" now exists as verifyReceiptOffline. Pull main before starting.
+
 Goal: the first two beats the judge must feel. A browser app where a user connects Phantom,
 signs in against the relay, sees a hardcoded consent sheet, approves with the wallet's own
 sign-message dialog over the human-readable consent text, and gets a receipt rendered locally.
@@ -93,25 +101,30 @@ Done means:
    purpose, provider OpenAI, model placeholder, the terms lines from docs/RECEIPT-FORMAT.md)
    rendered as OUR sheet with the header "Service: Flair Health consent receipts (prototype).
    Operator: Regal Pines Pte. Ltd." and every field the wallet will show. Build the text with
-   buildConsentText from @consent-receipts/receipt; call assertSafeField on every free-text
-   field first. Show the exact text to be signed in a collapsible "what you will sign" block.
-4. Approve: signMessage over that text. Verify the signature in the browser with tweetnacl
-   against the connected pubkey before showing anything green. Render the receipt JSON from
+   buildConsentText from @consent-receipts/receipt. It validates every field itself and throws
+   on anything that could split or impersonate a line (your check 3, fixed); the sheet must
+   catch that throw and refuse to render, never show a partial sheet. Show the exact text to be
+   signed in a collapsible "what you will sign" block.
+4. Approve: signMessage over that text. Before showing anything green, run
+   verifyReceiptOffline from @consent-receipts/receipt on the receipt you built and show its
+   checks; in step 1 exactly one fails, "org signature over receipt_hash", and the screen must
+   say so plainly ("not yet co-signed by the operator"). Render the receipt JSON from
    docs/RECEIPT-FORMAT.md with decision APPROVE, user.signature filled, org_signature and
    anchor null, receipt_hash from receiptHash. Offer "Download receipt".
 5. Decline: one tap, no wallet dialog. Render a DECLINE receipt with user.consent_text,
    user.signature and file.sha256_relay all null. The screen says "asked, refused, nothing
    sent". No "keep a signed copy" option yet.
-6. packages/receipt: make org_signature nullable (string | null) and add a test that a step-1
-   receipt with org and anchor null hashes deterministically. Keep the golden test green.
+6. packages/receipt is already updated for step 1: org_signature is nullable and
+   verifyReceiptOffline exists with tests. Do not change the package; report if it lacks
+   something.
 7. Copy: only wording from docs/CLAIMS.md. Never "legally binding", "notarised", "deleted",
    "Consent Compact".
 8. A screen recording or six screenshots in the PR: connect, sign-in dialog, sheet, wallet
    dialog showing the consent text, approve receipt, decline receipt.
 
 Files: apps/web/ (new; wallet-adapter react, react-ui, wallets for Phantom and Solflare,
-@solana/web3.js 1.x, tweetnacl, bs58, @consent-receipts/receipt); packages/receipt for item 6
-only. Do not touch apps/relay, packages/anchor-client, programs/, scripts/. If the relay needs
+@solana/web3.js 1.x, tweetnacl, bs58, @consent-receipts/receipt). Stage explicit paths, never
+git add -A. Do not touch apps/relay, packages/anchor-client, programs/, scripts/. If the relay needs
 a CORS header for the Vite origin, say so in the PR, or add hono/cors for
 http://localhost:5173 only in one clearly labelled commit.
 

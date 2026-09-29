@@ -13,9 +13,7 @@
     "@consent-receipts/receipt": "*",
     "@consent-receipts/anchor-client": "*",
     "@coral-xyz/anchor": "^0.32.1",
-    "@solana/web3.js": "^1.99.0",
-    "bs58": "^6.0.0",
-    "tweetnacl": "^1.0.3"
+    "@solana/web3.js": "^1.99.0"
   },
   "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.9.3", "@types/node": "^24.3.0" }
 }
