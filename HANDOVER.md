@@ -58,5 +58,8 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
   discriminator, digest, org key, slot, unix time, bump. Nothing identifying the user.
 - NOT verified: `verify-receipt --receipt` (needs a receipt with real signatures, step 1);
   the relay `POST /anchor` endpoint and web verify panel do not exist yet.
+- CI on the deploy commit: rust green, ts red (scripts typecheck ran before the receipt
+  package was built). Fixed: root `typecheck` builds packages/receipt first. Re-run green?
+  See the run linked from the next commit.
 - Engineer 1's first brief written: docs/briefs/001-verify-step0.md.
 - Next: PO answers N2/N3; step 1 brief after brief 001 closes; relay skeleton with POST /anchor.
