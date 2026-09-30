@@ -34,8 +34,9 @@ Signed by: <user pubkey base58>
 `Request ID` and `Expires at` stop replay across time.
 
 **Decline is not wallet-signed.** Refusing is one tap. The organisation signs a decline receipt
-with `decision: "DECLINE"`, `file.sha256_relay: null`, `user.signature: null`, and the same
-request block, attesting "asked, refused, nothing sent". It is anchored like an approval.
+with `decision: "DECLINE"`, every `file` field null (not even the file's hash leaves the
+device), `user.consent_text` and `user.signature` null, and the same request block, attesting
+"asked, refused, nothing sent". It is anchored like an approval.
 Optional, off by default: after a decline the user may sign a copy ("keep a signed copy"),
 which fills `user.consent_text` and `user.signature` with a `Decision: DECLINE` text.
 
@@ -49,7 +50,7 @@ which fills `user.consent_text` and `user.signature` with a `Decision: DECLINE` 
     "provider": "...", "model": "...", "terms": ["...", "..."]
   },
   "decision": "APPROVE",
-  "file": { "sha256_client": "<hex>", "sha256_relay": "<hex or null on decline>", "size": 2113 },
+  "file": { "sha256_client": "<hex, null on decline>", "sha256_relay": "<hex, null on decline>", "size": 2113 },
   "user": { "pubkey": "<base58>", "consent_text": "<the exact text above, or null on decline>", "signature": "<base58 or null on decline>" },
   "org": { "service": "Flair Health consent receipts (prototype)", "operator": "Regal Pines Pte. Ltd.",
            "pubkey": "<base58>", "signature": "<base58 over receipt_hash>" },
@@ -62,6 +63,14 @@ which fills `user.consent_text` and `user.signature` with a `Decision: DECLINE` 
 
 Canonical JSON: RFC 8785 (JCS) via a small shared function in `packages/receipt`. Both sides
 must produce identical bytes; the vitest suite pins a golden vector.
+
+## Drafts and who fills what
+
+Only the relay fills `file.sha256_relay`, `time.relay_signed_at`, `org_signature`, and `anchor`.
+A browser-side draft leaves them null. `verifyReceiptOffline` marks a null operator field as
+WAIT ("awaiting operator"), never PASS, and `receiptStatus` returns `failed` the moment any
+present field is wrong, `awaiting-operator` when only operator fields are missing, and
+`verified` when every check passes. The screen's headline follows that status.
 
 ## Exported receipts from the shipped app
 

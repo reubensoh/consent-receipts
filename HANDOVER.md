@@ -123,3 +123,48 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
 - `gh` is installed and authenticated (engineer's note); memory updated.
 - Brief 002 revised for these fixes and ISSUED (paste block in the file).
 - Wallet: ~6.72 devnet SOL after buffer recovery.
+
+### 2026-09-30 (brief 002 closed, brief 003 issued)
+- PO asked about a GitHub email "Run failed: ci - main (85849b0)". That is the old ts failure
+  (typecheck ran before the receipt package was built), fixed in 596bf89 the same day; every
+  run on main since is green.
+- Reviewed PR #2 (apps/web, step 1): read every file, ran typecheck/test/build from a clean
+  install, then drove the real app against the real relay in the browser pane with a Wallet
+  Standard stand-in wallet injected through the console (WebCrypto Ed25519). Sign-in, sheet,
+  approve, decline all work; the wallet is asked to sign exactly the sheet text; only POSTs to
+  /session/challenge and /session/verify, no address in any URL; localStorage holds only the
+  wallet adapter's `walletName`. Merged as b030d8c.
+- Review findings, all confirmed live, fixed on main in "Review fixes for step 1":
+  1. headline said "Signed, timestamped, verifiable" even when the user-signature check failed
+     → headline now follows `receiptStatus()` (verified / awaiting-operator / failed);
+  2. "Start over" reused the same request id and expiry → fresh request per sheet, and approve
+     refuses after expiry;
+  3. the browser draft filled relay-only fields (`sha256_relay`, `relay_signed_at`) → now null,
+     shown as WAIT "awaiting operator";
+  4. session survived a wallet switch → reset on pubkey change.
+  Also: a DECLINE carries no file hash or size (all `file` fields null; verifier enforces it);
+  `npm run dev -w apps/relay` loads `.env` (the README instruction did not work before);
+  `.claude/` is fully gitignored; local `apps/relay/.env` created with a random SESSION_SECRET.
+- NOT verified: the real Phantom dialogs (how Phantom renders the sign-in text and the
+  22-line consent text). Needs the PO.
+- Brief 003 issued (docs/briefs/003-receipt-lands.md): relay /request/mock + /consent
+  (verify, co-sign, anchor), web wiring, anchored block with Solscan link, decline signed and
+  anchored. Pulled ahead of the vault per the PO's priority order.
+- Dev servers: `.claude/launch.json` has `relay` and `web` configs for the browser pane.
+
+#### PO checklist: Phantom run
+1. In the Chrome profile that has Phantom: Phantom → Settings → Developer Settings → turn on
+   Testnet Mode and pick Solana Devnet. No funds are needed; the wallet only signs messages.
+2. Terminal 1: `cd /Volumes/T7/consent-receipts-demo && npm run dev -w apps/relay`
+   (expect "relay listening on :8787").
+3. Terminal 2: `cd /Volumes/T7/consent-receipts-demo && npm run dev -w apps/web`, then open
+   http://localhost:5173 in that Chrome profile.
+4. Select Wallet → Phantom → connect. Click "Sign in with wallet". Screenshot Phantom's dialog.
+   It should show readable text beginning "localhost wants you to sign in with your Solana
+   account:".
+5. On the sheet, open "What you will sign", then click Approve. Screenshot Phantom's dialog.
+   It should show the same text as the sheet, starting "Consent receipt request". Check whether
+   Phantom shows all 22 lines or truncates, and whether it shows any warning.
+6. After approving, the page should say "Consent signed (draft receipt)" with seven PASS and
+   two WAIT lines. Click Start over, sign in again, click Decline: Phantom must NOT open.
+7. Send me the two screenshots and anything that looked off.

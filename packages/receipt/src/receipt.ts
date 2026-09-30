@@ -8,10 +8,12 @@ export interface ReceiptBody {
     id: string; item: string; purpose: string; provider: string; model: string; terms: string[];
   };
   decision: Decision;
-  file: { sha256_client: string; sha256_relay: string | null; size: number };
+  /** On DECLINE all three are null: nothing about the file leaves the device, not even its hash. */
+  file: { sha256_client: string | null; sha256_relay: string | null; size: number | null };
   user: { pubkey: string; consent_text: string | null; signature: string | null };
   org: { service: string; operator: string; pubkey: string };
-  time: { issued_at: string; relay_signed_at: string };
+  /** relay_signed_at is set by the relay only; null in a browser-side draft. */
+  time: { issued_at: string; relay_signed_at: string | null };
 }
 
 export interface Receipt extends ReceiptBody {

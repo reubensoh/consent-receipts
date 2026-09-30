@@ -40,7 +40,7 @@ if (opt("--digest")) {
   process.exit(2);
 }
 
-for (const c of checks) console.log(`${c.ok ? "PASS" : "FAIL"}  ${c.name}  ${c.detail}`);
+for (const c of checks) console.log(`${c.ok ? "PASS" : c.pending ? "WAIT" : "FAIL"}  ${c.name}  ${c.detail}`);
 const failed = checks.filter((c) => !c.ok).length;
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed: signed, timestamped, verifiable, anchored.");
 process.exit(failed ? 1 : 0);

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
-import { buildConsentText, receiptHash, emptyOrg, utf8, verifyReceiptOffline, type Receipt, type ReceiptBody } from "../src/index.js";
+import { buildConsentText, receiptHash, emptyOrg, utf8, verifyReceiptOffline, receiptStatus, type Receipt, type ReceiptBody } from "../src/index.js";
 
 const user = nacl.sign.keyPair(), org = nacl.sign.keyPair();
 const USER = bs58.encode(user.publicKey), ORG = bs58.encode(org.publicKey);
@@ -28,6 +28,7 @@ async function approved(): Promise<Receipt> {
   return { ...body, receipt_hash, org_signature: sign(org, receipt_hash), anchor: null };
 }
 const failed = (cs: { name: string; ok: boolean }[]) => cs.filter((c) => !c.ok).map((c) => c.name);
+const stripMeta = (r: Receipt): ReceiptBody => { const { receipt_hash: _h, org_signature: _o, anchor: _a, ...b } = r; return b; };
 
 describe("verifyReceiptOffline", () => {
   it("passes a well-formed approved receipt", async () => {
@@ -51,12 +52,32 @@ describe("verifyReceiptOffline", () => {
     const { receipt_hash, org_signature, anchor, ...body } = r;
     expect(await receiptHash(body)).toBe(receipt_hash);
   });
+  it("status: verified, awaiting-operator (draft), failed (bad signature even in a draft)", async () => {
+    const full = await approved();
+    expect(receiptStatus(await verifyReceiptOffline(full))).toBe("verified");
+    // a browser-side draft: no relay hash, no relay time, no org signature
+    const draftBody: ReceiptBody = { ...stripMeta(full), file: { ...full.file, sha256_relay: null }, time: { ...full.time, relay_signed_at: null } };
+    const draft: Receipt = { ...draftBody, receipt_hash: await receiptHash(draftBody), org_signature: null, anchor: null };
+    const cs = await verifyReceiptOffline(draft);
+    expect(failed(cs)).toEqual(["client and relay file hashes match", "org signature over receipt_hash"]);
+    expect(cs.filter((c) => !c.ok).every((c) => c.pending)).toBe(true);
+    expect(receiptStatus(cs)).toBe("awaiting-operator");
+    // same draft with a signature that does not verify: failed, never "awaiting"
+    const badBody: ReceiptBody = { ...draftBody, user: { ...draftBody.user, signature: sign(org, draftBody.user.consent_text!) } };
+    const bad: Receipt = { ...badBody, receipt_hash: await receiptHash(badBody), org_signature: null, anchor: null };
+    expect(receiptStatus(await verifyReceiptOffline(bad))).toBe("failed");
+  });
   it("a decline receipt needs no user signature", async () => {
     const a = await approved();
-    const body: ReceiptBody = { ...a, decision: "DECLINE", file: { ...a.file, sha256_relay: null }, user: { pubkey: USER, consent_text: null, signature: null } };
+    const body: ReceiptBody = { ...a, decision: "DECLINE", file: { sha256_client: null, sha256_relay: null, size: null }, user: { pubkey: USER, consent_text: null, signature: null } };
     const { receipt_hash: _h, org_signature: _o, anchor: _a, ...clean } = body as Receipt;
     const receipt_hash = await receiptHash(clean);
     const r: Receipt = { ...clean, receipt_hash, org_signature: sign(org, receipt_hash), anchor: null };
     expect(failed(await verifyReceiptOffline(r))).toEqual([]);
+    // a decline that leaks the file hash is not "nothing sent"
+    const leakBody: ReceiptBody = { ...clean, file: { sha256_client: request.sha256, sha256_relay: null, size: request.size } };
+    const lh = await receiptHash(leakBody);
+    expect(failed(await verifyReceiptOffline({ ...leakBody, receipt_hash: lh, org_signature: sign(org, lh), anchor: null })))
+      .toEqual(["decline: no user signature, nothing sent"]);
   });
 });

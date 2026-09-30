@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { verifyReceiptOffline, type Check, type Receipt } from "@consent-receipts/receipt";
+import { verifyReceiptOffline, receiptStatus, type Check, type Receipt } from "@consent-receipts/receipt";
 import { CheckList } from "./CheckList.js";
 
 export function ReceiptView({ receipt, onStartOver }: { receipt: Receipt; onStartOver: () => void }) {
@@ -15,9 +15,22 @@ export function ReceiptView({ receipt, onStartOver }: { receipt: Receipt; onStar
     };
   }, [receipt]);
 
-  const orgCheck = checks?.find((c) => c.name === "org signature over receipt_hash");
-  const failing = checks?.filter((c) => !c.ok) ?? [];
-  const onlyOrgFails = checks !== null && failing.length === 1 && failing[0] === orgCheck;
+  // Nothing is claimed until the checks have run; the headline follows their result.
+  const status = checks ? receiptStatus(checks) : null;
+  const approved = receipt.decision === "APPROVE";
+  const headline =
+    status === null ? "Checking the receipt…"
+    : status === "failed" ? "Receipt failed verification"
+    : status === "awaiting-operator" ? (approved ? "Consent signed (draft receipt)" : "Declined (draft receipt)")
+    : approved ? "Receipt: approved" : "Receipt: declined";
+  const note =
+    status === null ? ""
+    : status === "failed" ? "Do not rely on this receipt. The failing checks are listed below."
+    : status === "awaiting-operator"
+      ? (approved
+          ? "Signed by your wallet. Awaiting the operator: file hash confirmation and co-signature. Not yet anchored."
+          : "Asked, refused, nothing sent. Awaiting the operator's signature. Not yet anchored.")
+    : (approved ? "Signed by your wallet and by the operator." : "Asked, refused, nothing sent. Signed by the operator.");
 
   const download = () => {
     const blob = new Blob([JSON.stringify(receipt, null, 2)], { type: "application/json" });
@@ -31,16 +44,10 @@ export function ReceiptView({ receipt, onStartOver }: { receipt: Receipt; onStar
 
   return (
     <section className="receipt">
-      <h2>{receipt.decision === "APPROVE" ? "Receipt: approved" : "Receipt: declined"}</h2>
-
-      {receipt.decision === "DECLINE" && (
-        <p className="receipt-note">Asked, refused, nothing sent.</p>
-      )}
-
-      {receipt.decision === "APPROVE" && (
-        <p className="receipt-note">
-          Signed, timestamped, verifiable — not yet anchored.
-          {onlyOrgFails && " Not yet co-signed by the operator; that happens in a later step."}
+      <h2 className={status === "failed" ? "receipt-failed" : undefined}>{headline}</h2>
+      {note && (
+        <p className={status === "failed" ? "receipt-note receipt-failed" : "receipt-note"} role={status === "failed" ? "alert" : undefined}>
+          {note}
         </p>
       )}
 

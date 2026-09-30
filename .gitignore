@@ -16,3 +16,4 @@ keys/
 
 # Claude desktop session worktrees (engineer sessions); never part of the repo
 .claude/worktrees/
+.claude/

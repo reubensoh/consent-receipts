@@ -168,3 +168,7 @@ button:disabled {
   color: #666;
   word-break: break-all;
 }
+
+/* status colours follow the checks: waiting on the operator is not a failure */
+.check-wait .check-mark { color: #8a6d00; font-weight: 700; }
+.receipt-failed { color: #a40000; }

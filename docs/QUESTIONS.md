@@ -13,6 +13,20 @@ spend-capped key, thin one-file adapter; H3 build clearance via the lock protoco
 a separate profile, PO confirms when installed; I1 one engineer, first brief is an independent
 verification of step 0; I3 dates to follow; J1 payment is a roadmap slide, not a beat.
 
+## P. Open as of 2026-09-30 (these block the demo, in this order)
+
+- P1. **Phantom run (PO).** Step 1 is verified with a stand-in wallet only. I need you to run
+  it once with real Phantom and tell me what the two wallet dialogs show. Steps are in
+  HANDOVER.md, "PO checklist: Phantom run".
+- P2. **Terms line 3 (lawyer, B3).** The sheet currently shows the literal placeholders
+  `<YYYY-MM-DD>` and `<url>`. I need the exact sentence, the policy URL, and the policy date to
+  cite. A judge will read this line. It is one constant, a one-line change.
+- P3. **Decline sends no file hash (philosopher).** I made a decline carry nothing about the
+  file, not even its hash or size, so "asked, refused, nothing sent" is literal. The decline
+  receipt names the item and purpose that were asked for, nothing else. Confirm or correct.
+- P4. **Model id (PO, B2).** Which OpenAI mini-class model id goes on the sheet? It appears in
+  the signed text, so it must be the real one before step 4b.
+
 ## N. New, from the alignment
 
 **Answered 2026-09-29 (evening):** N1 operator line confirmed; N6 service line is "Flair Health

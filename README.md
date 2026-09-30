@@ -89,15 +89,26 @@ npm run verify-receipt -w scripts -- --receipt path/to/receipt.json
 Anchoring a new digest needs the organisation keypair, which only the operator holds:
 `npm run anchor-digest -w scripts -- <64 hex>`.
 
-Relay (operator only): copy `apps/relay/.env.example` to `apps/relay/.env`, fill it, then
-`npm run dev -w apps/relay`. Routes: `GET /health`, `POST /session/challenge {pubkey}`,
+Web app plus relay, two terminals:
+
+```bash
+npm run dev -w apps/relay
+```
+
+```bash
+npm run dev -w apps/web
+```
+
+Then open http://localhost:5173 in a browser with Phantom (devnet). The relay needs
+`apps/relay/.env` (copy `apps/relay/.env.example`, set `SESSION_SECRET` to 64 hex chars) and an
+org keypair at `apps/relay/.keys/org.json`; the dev script loads the `.env` file itself. Routes: `GET /health`, `POST /session/challenge {pubkey}`,
 `POST /session/verify {pubkey, message, signature}` → `{token}`, `POST /anchor {digest}` with
 `Authorization: Bearer <token>`. The wallet address is never in a URL. Requests are not logged.
 
 ## Status
 
-Step 0 done. Step 2 done except the web verify panel: program on devnet, digest anchoring
-and digest-only verification from the CLI and through the relay (sign-in, rate limit, 409 on
-repeat), all verified against devnet. Not yet: web app, full-receipt verification (needs step
-1 signatures), tool loop.
+Steps 0 and 2 done. Step 1 merged: wallet sign-in against the relay, the consent sheet, the
+wallet signing the exact sheet text, a draft receipt, one-tap decline. Verified in a browser
+with a Wallet Standard stand-in wallet; the run with a real Phantom dialog is pending. Not yet:
+the relay co-signing and anchoring a full receipt (brief 003, in progress), vault, model.
 Read [HANDOVER.md](HANDOVER.md).
