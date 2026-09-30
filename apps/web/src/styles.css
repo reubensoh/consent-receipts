@@ -1,0 +1,170 @@
+:root {
+  color-scheme: light;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+body {
+  margin: 0;
+  background: #f5f5f0;
+  color: #1a1a1a;
+}
+
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.tagline {
+  color: #666;
+  margin-top: -0.5rem;
+}
+
+.wallet-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.hint {
+  color: #666;
+}
+
+.error {
+  color: #a30000;
+  border: 1px solid #a30000;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.sheet {
+  border: 2px solid #1a1a1a;
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1rem;
+  background: #fff;
+}
+
+.sheet-error {
+  border-color: #a30000;
+}
+
+.sheet-service,
+.sheet-operator {
+  margin: 0;
+  font-weight: bold;
+}
+
+.sheet-fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1rem;
+  margin: 1rem 0;
+}
+
+.sheet-fields dt {
+  color: #555;
+}
+
+.sheet-fields dd {
+  margin: 0;
+}
+
+.mono {
+  font-size: 0.85em;
+  word-break: break-all;
+}
+
+.consent-text {
+  white-space: pre-wrap;
+  background: #f0f0e8;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.sheet-note {
+  font-size: 0.9em;
+  color: #444;
+}
+
+.sheet-actions,
+.receipt-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 2px solid #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #fff;
+  color: #1a1a1a;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.receipt {
+  border: 2px solid #1a1a1a;
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1rem;
+  background: #fff;
+}
+
+.receipt-note {
+  font-weight: bold;
+}
+
+.receipt-json {
+  white-space: pre-wrap;
+  background: #f0f0e8;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8em;
+  max-height: 20rem;
+  overflow: auto;
+}
+
+.check-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.check-list li {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  font-size: 0.9em;
+}
+
+.check-mark {
+  font-weight: bold;
+  width: 3.5em;
+}
+
+.check-pass .check-mark {
+  color: #0a6b0a;
+}
+
+.check-fail .check-mark {
+  color: #a30000;
+}
+
+.check-detail {
+  color: #666;
+  word-break: break-all;
+}

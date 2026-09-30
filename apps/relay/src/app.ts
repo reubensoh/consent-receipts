@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import type { Connection, Keypair } from "@solana/web3.js";
 import { anchorDigest, AlreadyAnchoredError, type AnchorResult } from "@consent-receipts/anchor-client";
 import { createChallenge, verifySignIn, issueToken, verifyToken } from "./session.js";
@@ -19,6 +20,9 @@ export function makeDeps(secret: string, domain: string, perMinute: number, conn
 export function createApp(d: Deps) {
   const app = new Hono<{ Variables: { pubkey: string } }>();
   const limiter = new RateLimiter(d.perMinute);
+
+  // apps/web (Vite dev server) is a different origin; nothing else is allowed (brief 002).
+  app.use("*", cors({ origin: "http://localhost:5173", allowMethods: ["GET", "POST"] }));
 
   app.get("/health", (c) => c.json({ ok: true }));
 
