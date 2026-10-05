@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
-import { buildConsentText, receiptStatus, sha256Hex, utf8, verifyReceiptOffline, type Receipt } from "@consent-receipts/receipt";
+import { buildConsentText, formatSize, receiptStatus, sha256Hex, utf8, verifyReceiptOffline, type Receipt } from "@consent-receipts/receipt";
 import { AlreadyAnchoredError } from "@consent-receipts/anchor-client";
 import { createApp, type Deps } from "../src/app.js";
 import { TERMS, MAX_FILE_BYTES, type Pending } from "../src/consent.js";
@@ -126,6 +126,21 @@ describe("POST /consent, approve", () => {
     expect(out.receipt.time.relay_signed_at).toMatch(ISO);                  // the relay's own clock
     expect(out.receipt.anchor).toMatchObject({ cluster: "devnet", pda: "PDA111", tx: "TX111", slot: 123, block_time: 1_790_000_000 });
     expect(ctx.anchored).toEqual([out.receipt.receipt_hash]);               // anchored once, by hash only
+  });
+
+  it("builds a body whose every field agrees with the text the user signed", async () => {
+    // verifyReceiptOffline cross-checks only the request id and the file hash against the signed text;
+    // this pins the rest, so the body the operator signs cannot drift from what the wallet showed.
+    const ctx = setup(), user = await newUser(ctx);
+    const r = ((await (await ctx.call("/consent", await approveBody(ctx, user, await ask(ctx, user)), user.token)).json()) as Result).receipt;
+    const lines = r.user.consent_text!.split("\n");
+    const expected = [
+      `Operator key: ${r.org.pubkey}`, `Item: ${r.request.item}`, `SHA-256: ${r.file.sha256_client}`,
+      `Size: ${formatSize(r.file.size!)}`, `Purpose: ${r.request.purpose}`, `Provider: ${r.request.provider}`,
+      `Model: ${r.request.model}`, ...r.request.terms.map((t) => `  - ${t}`), `Request ID: ${r.request.id}`,
+      `Issued at: ${r.time.issued_at}`, `Signed by: ${r.user.pubkey}`,
+    ];
+    for (const line of expected) expect(lines).toContain(line);
   });
 
   it("lets the client choose neither the operator nor the relay's fields", async () => {
