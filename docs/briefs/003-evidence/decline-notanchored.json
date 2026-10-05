@@ -1,0 +1,39 @@
+{
+  "version": "consent-receipt/0",
+  "request": {
+    "id": "fac6a1a3-00fc-40fe-8ea2-4a57a6fa3b36",
+    "item": "Documents/lab-report.md",
+    "purpose": "compare values to reference ranges",
+    "provider": "OpenAI",
+    "model": "gpt-mini-placeholder",
+    "terms": [
+      "used only to answer this conversation",
+      "sent once to the provider named above, not kept on our side",
+      "we do not permit training on it; the provider's policy of <YYYY-MM-DD>: <url>",
+      "the provider has its own retention window; see that policy"
+    ]
+  },
+  "decision": "DECLINE",
+  "file": {
+    "sha256_client": null,
+    "sha256_relay": null,
+    "size": null
+  },
+  "user": {
+    "pubkey": "2z1FuQ2cQAJULvc35SBdHvZwAyCLgSpRA6RJkhxvvcS1",
+    "consent_text": null,
+    "signature": null
+  },
+  "org": {
+    "service": "Flair Health consent receipts (prototype)",
+    "operator": "Regal Pines Pte. Ltd.",
+    "pubkey": "C2DvMQHkaNruwpxwtLLhtJtFyP1W4bc1VcjEgQNYksUS"
+  },
+  "time": {
+    "issued_at": "2026-10-05T12:37:03Z",
+    "relay_signed_at": "2026-10-05T12:37:18Z"
+  },
+  "receipt_hash": "bae4c8baec49cfc030b8508b2dbc3bee59d558b8cadb1ea64c3525e047969c7c",
+  "org_signature": "zYhMpcgeS37GRqV1BafpzZL5u7acr8YMdpsHF4PGD2w9zQkPHX1KWwtuaWzni1wKGjt55BjJgXknETgioEAgdPp",
+  "anchor": null
+}
