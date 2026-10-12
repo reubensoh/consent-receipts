@@ -2,7 +2,7 @@
 
 **Working title. Not a brand.** Any product name goes to the PO for a trademark check first.
 
-This repository is Flair Health's proof of concept. The Colosseum entrant is Regal Pines Pte. Ltd.
+This repository is Flair Health's proof of concept. Owned by Regal Pines Pte. Ltd. The Colosseum entrant is Reuben Soh, a director of the company, entering with its authority.
 Nothing from the shipped Flair Health app enters this repository; the only bridge is a receipt's
 canonical SHA-256 digest, which this prototype can anchor and verify (see "The bridge" below).
 
@@ -24,7 +24,8 @@ The shipped app mints consent receipts with a canonical SHA-256 digest and an Ed
 signature. The anchor program and the verifier take **any 32-byte digest** as input, not only
 receipts minted by this prototype. Demo Day shows the real app's consent sheet and receipt in a
 recording, then this prototype anchoring that receipt's digest on devnet with the organisation
-key paying the fee, the Solscan verification, and finally what a court would be shown.
+key paying the fee, the Solscan verification, and finally what an outsider can check. The Flair
+Health app now anchors its own receipts with a Memo transaction; the demonstration video shows that.
 
 ## Threat model, in one line
 
@@ -61,7 +62,7 @@ consent-receipts/
 No token. Devnet only. No real funds, no escrow of user money. Receipt content never on chain,
 hash only. The user's wallet address never appears on chain per receipt and never in a URL;
 the byte-level evidence is the account dump in [docs/RECEIPT-FORMAT.md](docs/RECEIPT-FORMAT.md).
-Regal Pines Pte. Ltd. is the entrant and copyright holder; the PO is the sole submitter.
+Regal Pines Pte. Ltd. is the owner and copyright holder; the PO is the sole submitter.
 Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org access is set.
 
 ## Public identifiers (devnet)
