@@ -43,7 +43,7 @@ model, no org signature, no anchor yet.
    `verifyReceiptOffline` exists with tests. Do not change the package; report if it lacks
    something.
 7. Copy discipline: use only wording from docs/CLAIMS.md. "signed", "anchored", "verifiable".
-   Never "legally binding", "notarised", "deleted", "Consent Compact".
+   Never "legally binding", "notarised", "deleted", the candidate name.
 8. A screen recording (or 6 screenshots) in the PR: connect, sign-in dialog, sheet, wallet
    dialog showing the consent text, approve receipt, decline receipt.
 
@@ -118,7 +118,7 @@ Done means:
    verifyReceiptOffline exists with tests. Do not change the package; report if it lacks
    something.
 7. Copy: only wording from docs/CLAIMS.md. Never "legally binding", "notarised", "deleted",
-   "Consent Compact".
+   the candidate name.
 8. A screen recording or six screenshots in the PR: connect, sign-in dialog, sheet, wallet
    dialog showing the consent text, approve receipt, decline receipt.
 

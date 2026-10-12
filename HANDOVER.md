@@ -65,7 +65,7 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
 
 ### 2026-09-29 (night)
 - Rulings applied: operator line confirmed; service line "Flair Health consent receipts
-  (prototype)" (golden hash re-pinned); "Consent Compact" banned until the trademark filing is
+  (prototype)" (golden hash re-pinned); the candidate name banned until the trademark filing is
   confirmed; full journey ships with the PO's priority order in PLAN.md; account dump with byte
   annotations kept in docs/RECEIPT-FORMAT.md as the privacy evidence.
 - Lock protocol implemented: scripts/build-lock.sh (refuses on /tmp/flair_health_gate.lock,
@@ -88,7 +88,7 @@ Read this first in a fresh session. Newest entry at the bottom. Facts only; opin
   verbatim. Added to PLAN.md ritual and memory. Brief 001 relayed by the PO; its paste block
   appended to the file as the record.
 - Amendment to the ruling ratified: Flair Health's proof of concept under Regal Pines; code
-  separation stands; "Consent Compact" allowed only once the PO confirms the IPOS filing.
+  separation stands; the candidate name allowed only once the PO confirms the IPOS filing.
 - Brief 002 (step 1: wallet sign-in against the live relay routes, signed consent text, local
   receipt, one-tap decline) drafted at docs/briefs/002-step1-wallet-consent.md with its paste
   block. NOT issued; issue when 001 closes. Step 1 done-criteria in PLAN.md updated for the
