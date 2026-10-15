@@ -1,96 +1,98 @@
-# Consent receipts for sharing data with AI
+# Consent receipts
 
-**Working title. Not a brand.** Any product name goes to the PO for a trademark check first.
+A consent receipt is a record a person keeps of what they agreed to share, with whom, and on what
+terms. The receipt is signed on the person's own device. A fingerprint of it is anchored on
+Solana, so anyone holding the receipt can later check that it existed by a given time and has not
+changed since.
 
-This repository is Flair Health's proof of concept. Owned by Regal Pines Pte. Ltd. The Colosseum entrant is Reuben Soh, a director of the company, entering with its authority.
-Nothing from the shipped Flair Health app enters this repository; the only bridge is a receipt's
-canonical SHA-256 digest, which this prototype can anchor and verify (see "The bridge" below).
+"Consent receipts" is a descriptive name, not a brand.
 
-A more private, more transparent way of sharing sensitive content (health records, code, art)
-with an AI online, with no accounts. Files stay in a client-side vault. When the model wants one,
-it has to ask. A consent sheet shows what the model needs and on what terms. The user approves or
-declines by signing a human-readable message with their Solana wallet before anything moves.
-Whatever is not on the sheet was not consented. The receipt is signed by the user and the
-organisation, and its hash is anchored on Solana devnet so the time and the terms can be proven
-later without the contents ever being public.
+## Why this exists
 
-What an outsider can check: the receipt is **signed, timestamped, verifiable**, and its digest is
-**anchored** on devnet. What we never claim: that it is legally binding or notarised, that it
-prevents hallucination, or that it makes AI safe. See [docs/CLAIMS.md](docs/CLAIMS.md).
+Apps send people's data to AI services and other companies every day. The terms live in a policy
+the company wrote and can change, and the person keeps no record of what left or on what terms. If
+there is ever a dispute, the only record belongs to one side of it.
 
-## The bridge
+Consent receipts give the person their own copy. Before anything leaves, the app shows a short
+agreement: who receives the data, on what terms, and what each party keeps. If the person
+approves, the app writes a receipt, signs it, and puts its fingerprint on a public ledger that
+neither side controls. Anything not listed on the agreement was not agreed to.
 
-The shipped app mints consent receipts with a canonical SHA-256 digest and an Ed25519 user
-signature. The anchor program and the verifier take **any 32-byte digest** as input, not only
-receipts minted by this prototype. Demo Day shows the real app's consent sheet and receipt in a
-recording, then this prototype anchoring that receipt's digest on devnet with the organisation
-key paying the fee, the Solscan verification, and finally what an outsider can check. The Flair
-Health app now anchors its own receipts with a Memo transaction; the demonstration video shows that.
+## Where it runs today: Flair Health
 
-## Threat model, in one line
+Flair Health is a health app by Regal Pines Pte. Ltd., in TestFlight on iOS. The person's data is
+encrypted and kept on their phone. Every AI request in Flair is checked against the agreement the
+person approved, and each one produces a signed receipt.
 
-The first bad actor is the organisation running the service, not the model. The receipt binds
-that organisation to what it declared. It does not protect content that is already public
-elsewhere.
+Solana anchoring runs in our test build, on devnet, for two of Flair's AI features (Refresh
+Insights and Eat Now). It is not yet in the TestFlight build. It will reach users with mainnet.
 
-## Repository map (proposed)
+Flair Health's own code is not in this repository. [docs/SOLANA.md](docs/SOLANA.md) describes
+exactly what it puts on Solana and how the phone checks it.
 
-```
-consent-receipts/
-  README.md                 this file
-  LICENSE, NOTICE           Apache-2.0, Copyright 2026 Regal Pines Pte. Ltd.
-  ROADMAP.md                out of Demo Day scope, deliberately
-  HANDOVER.md               the scroll a fresh session reads first
-  docs/
-    ARCHITECTURE.md         components, flows, key decisions, known limits
-    RECEIPT-FORMAT.md       the receipt and the consent message, byte for byte
-    PLAN.md                 walking skeleton, "done" per step, dates
-    QUESTIONS.md            what the PO must answer before an engineer starts
-    CLAIMS.md               allowed and forbidden wording
-    DEMO-SCRIPT.md          the 5-minute talk (step 7)
-  packages/receipt/         shared TS: canonical JSON, hashing, message text, verify()
-  packages/anchor-client/   Node TS: program IDL, PDA derivation, anchorDigest() (org key pays)
-  apps/web/                 Vite + React + TS: sign-in, terminal, vault, consent sheet, receipt view
-  apps/relay/               Node 24 + TS (Hono): sign-in, POST /anchor, rate limit; later tool loop, co-sign
-  programs/consent_anchor/  Anchor 1.1.2 program: one PDA per receipt hash (or memo, TA decides)
-  scripts/                  anchor-digest and verify-receipt CLIs, build-lock.sh (lock protocol)
-  Anchor.toml  Cargo.toml  package.json (npm workspaces)  rust-toolchain.toml
-```
+## How a receipt reaches Solana
 
-## Bindings
+1. The person reads the agreement and taps Approve.
+2. The phone writes the receipt and signs it with a key that stays on the phone.
+3. The phone computes the receipt's fingerprint, a SHA-256 hash. The receipt includes a random
+   value that never leaves the phone, so nobody can work out the fingerprint from what they know
+   about the person.
+4. Only the fingerprint goes to the operator's server, which writes it to Solana and pays the
+   fee. The server never sees the receipt.
+5. The phone reads the transaction back from a public Solana node and confirms the fingerprint
+   matches.
 
-No token. Devnet only. No real funds, no escrow of user money. Receipt content never on chain,
-hash only. The user's wallet address never appears on chain per receipt and never in a URL;
-the byte-level evidence is the account dump in [docs/RECEIPT-FORMAT.md](docs/RECEIPT-FORMAT.md).
-Regal Pines Pte. Ltd. is the owner and copyright holder; the PO is the sole submitter.
-Apache-2.0. The repo moves to the `flairhealth-oss` GitHub organisation once org access is set.
+The chain holds the fingerprint, the operator's key that paid, and the time. It never holds the
+receipt, the data, or anything that identifies the person.
 
-## Public identifiers (devnet)
+## What a receipt proves, and what it does not
 
-| What | Value |
+A matching fingerprint on Solana shows that the receipt existed no later than that block's time
+and has not been changed since. The receipt itself shows what the person approved and what was
+sent.
+
+It does not show that the company kept its word afterwards. A receipt records the promise and the
+request; it cannot watch what happens next. It does not stop data leaving the phone. It makes what
+left, and on what terms, something the person can check. It is not a legal certificate.
+
+## What is in this repository
+
+This repository is the open prototype of the Solana side, under Apache-2.0. It anchors and checks
+any 32-byte fingerprint, so it works with Flair's receipts as well as its own.
+
+| Path | What it does |
 |---|---|
-| Organisation signing key (Operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
-| consent_anchor program id (deployed 2026-09-29, upgraded in place the same day for org-scoped seeds) | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
-| Test digest anchored under the org-scoped seeds (sha256 of "abc") | [tx on Solscan](https://solscan.io/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet), PDA `FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n` |
+| `programs/consent_anchor` | An Anchor program on devnet. One small account per fingerprint, scoped to the organisation that anchored it. |
+| `packages/anchor-client` | TypeScript client: anchor a fingerprint, find it again by fingerprint, read its slot and time. |
+| `packages/receipt` | The receipt format: canonical JSON, hashing, the consent text a wallet signs, offline verification. |
+| `scripts` | Two command-line tools, `anchor-digest` and `verify-receipt`. |
+| `apps/relay` | A small server with no database: wallet sign-in without an account, and `POST /anchor`, rate limited per wallet. |
+| `apps/web` | A browser demo: sign in with a Solana wallet, read a consent sheet, sign it, receive a receipt. |
 
-## Try it (devnet)
+The prototype uses an Anchor program, while Flair Health uses Solana's Memo program. The two
+approaches, and the reasons for each, are in [docs/SOLANA.md](docs/SOLANA.md).
+
+## Try it on devnet
+
+Check a fingerprint that is already anchored (the SHA-256 of "abc", used as a test):
 
 ```bash
 npm ci && npm run build
 npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 ```
 
-That checks the operator's slot for the digest. To check another organisation's slot, add
-`--org <pubkey>`. For a full prototype receipt:
+This looks up the operator's account for that fingerprint and prints its slot and time. To check
+under another organisation's key, add `--org <pubkey>`. To check a full prototype receipt, both
+signatures included:
 
 ```bash
 npm run verify-receipt -w scripts -- --receipt path/to/receipt.json
 ```
 
-Anchoring a new digest needs the organisation keypair, which only the operator holds:
+Anchoring a new fingerprint needs the organisation's keypair, which only the operator holds:
 `npm run anchor-digest -w scripts -- <64 hex>`.
 
-Web app plus relay, two terminals:
+To run the web demo and the relay, use two terminals:
 
 ```bash
 npm run dev -w apps/relay
@@ -100,16 +102,56 @@ npm run dev -w apps/relay
 npm run dev -w apps/web
 ```
 
-Then open http://localhost:5173 in a browser with Phantom (devnet). The relay needs
-`apps/relay/.env` (copy `apps/relay/.env.example`, set `SESSION_SECRET` to 64 hex chars) and an
-org keypair at `apps/relay/.keys/org.json`; the dev script loads the `.env` file itself. Routes: `GET /health`, `POST /session/challenge {pubkey}`,
-`POST /session/verify {pubkey, message, signature}` → `{token}`, `POST /anchor {digest}` with
-`Authorization: Bearer <token>`. The wallet address is never in a URL. Requests are not logged.
+Then open http://localhost:5173 in a browser with a Solana wallet set to devnet. The relay needs
+`apps/relay/.env` (copy `apps/relay/.env.example` and set `SESSION_SECRET` to 64 hex characters)
+and an organisation keypair at `apps/relay/.keys/org.json`. Its routes are `GET /health`,
+`POST /session/challenge`, `POST /session/verify` and `POST /anchor`. The wallet address never
+appears in a URL, and requests are not logged.
+
+## Public identifiers (devnet)
+
+| What | Value |
+|---|---|
+| Organisation key (operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
+| `consent_anchor` program id | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
+| Test fingerprint anchored (SHA-256 of "abc") | [transaction on Solscan](https://solscan.io/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet), account `FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n` |
 
 ## Status
 
-Steps 0 and 2 done. Step 1 merged: wallet sign-in against the relay, the consent sheet, the
-wallet signing the exact sheet text, a draft receipt, one-tap decline. Verified in a browser
-with a Wallet Standard stand-in wallet; the run with a real Phantom dialog is pending. Not yet:
-the relay co-signing and anchoring a full receipt (brief 003, in progress), vault, model.
-Read [HANDOVER.md](HANDOVER.md).
+Built in this repository:
+
+- the `consent_anchor` program, deployed on devnet;
+- the anchor and verify command-line tools;
+- the relay, with wallet sign-in and anchoring;
+- the web demo, up to a signed consent sheet and a receipt kept in the browser (decline is one
+  tap and needs no signature);
+- CI running the program's Rust tests and the TypeScript tests.
+
+Not built yet:
+
+- the web demo anchoring its own receipts end to end (today anchoring runs through the
+  command-line tool and the relay);
+- the encrypted file vault and the model conversation in the web demo.
+
+Next, after the current Flair build:
+
+- exporting a single receipt from Flair Health;
+- a public web page that checks an exported receipt in the browser.
+
+Later, after funding:
+
+- mainnet, with many fingerprints batched into one transaction;
+- organisations countersigning receipts.
+
+Nothing here uses a token or real funds.
+
+## Ownership
+
+Regal Pines Pte. Ltd. owns this work and holds its copyright; it is licensed under Apache-2.0 (see
+[LICENSE](LICENSE) and [NOTICE](NOTICE)). Reuben Soh, a director of the company, entered it in
+Colosseum with the company's authority. The repository as it stood at the close of the
+submission window is tagged `colosseum-submission`; later commits change documentation only.
+
+The files under `docs/` other than [docs/SOLANA.md](docs/SOLANA.md), together with
+[HANDOVER.md](HANDOVER.md) and [ROADMAP.md](ROADMAP.md), are the build's working notes, kept as
+they were written. [docs/CLAIMS.md](docs/CLAIMS.md) lists the words we use and the ones we avoid.
