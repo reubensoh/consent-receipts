@@ -81,13 +81,13 @@ Nothing about the person is stored.
 - **One record per organisation and fingerprint.** Creating the same address twice fails, so a
   fingerprint can be anchored once per organisation. Because the organisation key is in the seeds,
   nobody can take another organisation's place for a given fingerprint.
-- **The trade-off is cost.** Each account holds about 0.0015 SOL in rent, far more than a memo's
+- **The trade-off is cost.** Each account holds 1,102,360 lamports (about 0.0011 SOL) in rent, far more than a memo's
   fee. That is fine for a prototype, and it is one reason Flair uses memos.
 - **The program can be upgraded, and we hold the upgrade authority.** A future version could in
   principle change or close these accounts. The transaction that created each account stays in
   the ledger's history either way, so the original record can still be found. A memo avoids the
-  question altogether: the fingerprint lives in the transaction itself, and no program of ours
-  holds it.
+  question altogether: the fingerprint lives in the transaction itself, no program of ours holds
+  it, and Solana's Memo program is deployed with a loader that does not allow upgrades.
 
 Both approaches accept any 32-byte fingerprint, so this repository's tools can anchor and check
 receipts from any app that produces one.

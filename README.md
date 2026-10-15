@@ -20,7 +20,7 @@ neither side controls. Anything not listed on the agreement was not agreed to.
 
 ## Where it runs today: Flair Health
 
-Flair Health is a health app by Regal Pines Pte. Ltd., in TestFlight on iOS. The person's data is
+[Flair Health](https://flairhealth.app) is a health app by Regal Pines Pte. Ltd., in TestFlight on iOS. The person's data is
 encrypted and kept on their phone. Every AI request in Flair is checked against the agreement the
 person approved, and each one produces a signed receipt.
 
@@ -122,7 +122,7 @@ appears in a URL, and requests are not logged.
 |---|---|
 | Organisation key (operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
 | `consent_anchor` program id | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
-| Test fingerprint anchored (SHA-256 of "abc") | [transaction on Solscan](https://solscan.io/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet), account `FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n` |
+| Test fingerprint anchored (SHA-256 of "abc") | transaction on [Solana Explorer](https://explorer.solana.com/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet) or [Solscan](https://solscan.io/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet); account `FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n` ([Explorer](https://explorer.solana.com/address/FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n?cluster=devnet)) |
 
 These are devnet keys. Mainnet will use new ones.
 
