@@ -69,8 +69,9 @@ any 32-byte fingerprint, so it works with Flair's receipts as well as its own.
 | `apps/relay` | A small server with no database: wallet sign-in without an account, and `POST /anchor`, rate limited per wallet. |
 | `apps/web` | A browser demo: sign in with a Solana wallet, read a consent sheet, sign it, receive a receipt. |
 
-The prototype uses an Anchor program, while Flair Health uses Solana's Memo program. The two
-approaches, and the reasons for each, are in [docs/SOLANA.md](docs/SOLANA.md).
+Flair Health anchors with Solana's Memo program, and that is the path wired into its test build.
+The Anchor program here came first, as a prototype that can find a record by its fingerprint
+alone. The trade-offs between the two are in [docs/SOLANA.md](docs/SOLANA.md).
 
 ## Try it on devnet
 
@@ -81,7 +82,9 @@ npm ci && npm run build
 npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
 ```
 
-This looks up the operator's account for that fingerprint and prints its slot and time. To check
+This only reads from the chain, so it needs no keys and no SOL. It looks up the operator's account
+for that fingerprint and prints its slot and time. If the public devnet node is busy, point
+`SOLANA_RPC_URL` at another devnet RPC. To check
 under another organisation's key, add `--org <pubkey>`. To check a full prototype receipt, both
 signatures included:
 
@@ -92,7 +95,12 @@ npm run verify-receipt -w scripts -- --receipt path/to/receipt.json
 Anchoring a new fingerprint needs the organisation's keypair, which only the operator holds:
 `npm run anchor-digest -w scripts -- <64 hex>`.
 
-To run the web demo and the relay, use two terminals:
+The tests run offline, with no keys or network: `npm test` covers the receipt format, hashing,
+tampered and mismatched receipts, and the relay's sign-in; `cargo test -p consent_anchor` covers
+the program's account layout and addresses.
+
+To run the web demo and the relay, use two terminals. The web demo stops at a signed receipt in
+the browser; it does not anchor yet.
 
 ```bash
 npm run dev -w apps/relay
@@ -115,6 +123,8 @@ appears in a URL, and requests are not logged.
 | Organisation key (operator: Regal Pines Pte. Ltd.) | `37WXBkSPhJx9B4bkzpjEbmyTQkLQK3F1Ytw3AEZmmr6G` |
 | `consent_anchor` program id | `72NKbS2kpoxzwAyznfzmq6GuKqS1yQtdnBLzWxhfbbCh` |
 | Test fingerprint anchored (SHA-256 of "abc") | [transaction on Solscan](https://solscan.io/tx/xj4r3H91WnP8519ETNVipQTBTdxWjum1PG43Gbg5FuMWhkme2jqSX6quCCREZe1zqG27RMmpzD7nHamncLqi7fH?cluster=devnet), account `FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n` |
+
+These are devnet keys. Mainnet will use new ones.
 
 ## Status
 
