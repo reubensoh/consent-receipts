@@ -13,18 +13,18 @@ Apps send people's data to AI services and other companies every day. The terms 
 the company wrote and can change, and the person keeps no record of what left or on what terms. If
 there is ever a dispute, the only record belongs to one side of it.
 
-Consent receipts give the person their own copy. Before anything leaves, the app shows a short
-agreement: who receives the data, on what terms, and what each party keeps. If the person
+Consent receipts give the person their own copy. Before their data goes to an AI model or a
+partner, the app shows a short agreement: who receives the data, on what terms, and what each party keeps. If the person
 approves, the app writes a receipt, signs it, and puts its fingerprint on a public ledger that
 neither side controls. Anything not listed on the agreement was not agreed to.
 
 ## Where it runs today: Flair Health
 
-[Flair Health](https://flairhealth.app) is a health app by Regal Pines Pte. Ltd., in TestFlight on iOS. The person's data is
+[Flair Health](https://flairhealth.app) is a health app by Regal Pines Pte. Ltd., in TestFlight on iOS. The person's health data is
 encrypted and kept on their phone. Every AI request in Flair is checked against the agreement the
-person approved, and each one produces a signed receipt.
+person approved, and each one leaves a receipt on the phone.
 
-Solana anchoring runs in our test build, on devnet, for two of Flair's AI features (Refresh
+Solana anchoring runs in an internal build, on devnet, for two of Flair's AI features (Refresh
 Insights and Eat Now). It is not yet in the TestFlight build. It will reach users with mainnet.
 
 Flair Health's own code is not in this repository. [docs/SOLANA.md](docs/SOLANA.md) describes
@@ -69,7 +69,7 @@ any 32-byte fingerprint, so it works with Flair's receipts as well as its own.
 | `apps/relay` | A small server with no database: wallet sign-in without an account, and `POST /anchor`, rate limited per wallet. |
 | `apps/web` | A browser demo: sign in with a Solana wallet, read a consent sheet, sign it, receive a receipt. |
 
-Flair Health anchors with Solana's Memo program, and that is the path wired into its test build.
+Flair Health anchors with Solana's Memo program, and that is the path wired into its internal build.
 The Anchor program here came first, as a prototype that can find a record by its fingerprint
 alone. The trade-offs between the two are in [docs/SOLANA.md](docs/SOLANA.md).
 
