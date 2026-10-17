@@ -14,8 +14,8 @@ import { utf8 } from "@consent-receipts/receipt";
 export const SESSION_TTL_S = 60 * 60;       // 1 hour (QUESTIONS D3 default)
 export const CHALLENGE_TTL_S = 5 * 60;
 
-const hmac = (secret: string, data: string) => createHmac("sha256", secret).update(data).digest("hex");
-const safeEq = (a: string, b: string) => a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
+export const hmac = (secret: string, data: string) => createHmac("sha256", secret).update(data).digest("hex");
+export const safeEq = (a: string, b: string) => a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 
 export interface Challenge { message: string; issuedAt: string; nonce: string }
 

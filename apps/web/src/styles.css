@@ -172,3 +172,14 @@ button:disabled {
 /* status colours follow the checks: waiting on the operator is not a failure */
 .check-wait .check-mark { color: #8a6d00; font-weight: 700; }
 .receipt-failed { color: #a40000; }
+
+/* the fourth beat: the anchored block and the mocked model's answer */
+.anchored { border: 2px solid #1a1a1a; border-radius: 6px; padding: 0.75rem 1rem; margin: 1rem 0; background: #f7faf5; }
+.anchored h3, .anchored h4 { margin: 0.25rem 0 0.5rem; }
+.anchored-missing { border-color: #8a6d00; background: #fffaf0; }
+.anchor-fields { display: grid; grid-template-columns: max-content 1fr; gap: 0.35rem 1rem; margin: 0.5rem 0; }
+.anchor-fields dt { color: #555; }
+.anchor-fields dd { margin: 0; }
+.answer { background: #f0f0e8; border-radius: 4px; padding: 0.5rem 0.75rem; margin: 0.75rem 0; }
+.answer h3 { margin: 0 0 0.25rem; font-size: 0.95em; }
+.answer p { margin: 0; }
