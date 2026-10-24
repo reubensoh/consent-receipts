@@ -44,8 +44,8 @@ exactly what it puts on Solana and how the phone checks it.
 
 The chain holds the fingerprint, the operator's key that paid, and the time. It never holds the
 receipt, the data, or anything that identifies the person.
-The transaction itself does show that our operator recorded something, and when, so someone who
-already knew when a person used Flair could link that moment to a transaction. They would still
+The transaction itself does show that Flair recorded a receipt, and when, so someone who already
+knew when a person used Flair could link that moment to a transaction. They would still
 learn nothing the receipt contains.
 
 ## What a receipt proves, and what it does not
