@@ -36,8 +36,9 @@ changed since.
 | | The random value inside the receipt |
 
 The fingerprint is salted. Each receipt contains a random value that never leaves the person's
-device, so the fingerprint cannot be guessed or matched to a person by someone who knows other
-details about them.
+device, so nobody can work out the fingerprint from what they know about the person. The
+transaction's time and the operator's account are public, though: someone who knew when a person
+used Flair could link that moment to a transaction, without learning anything the receipt contains.
 
 ## Two ways of anchoring
 
