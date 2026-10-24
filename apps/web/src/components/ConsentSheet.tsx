@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { buildConsentText, formatSize, type ConsentRequest } from "@consent-receipts/receipt";
-import { ORG_PUBKEY } from "../lib/consentRequest.js";
+import { ORG_PUBKEY } from "../lib/config.js";
 
 interface Props {
   request: ConsentRequest;
@@ -80,7 +80,12 @@ export function ConsentSheet({ request, userPubkey, busy, onApprove, onDecline }
 
       <p className="sheet-note">
         Whatever is not on this sheet was not consented. Approving asks your wallet to sign the
-        exact text above; declining sends nothing and asks for no signature.
+        exact text above; declining sends nothing about the file and asks for no signature.
+      </p>
+      <p className="sheet-note">
+        Prototype build: the request comes from a mocked model and the file is a bundled synthetic
+        lab report. After you approve, the file goes once to the relay, which checks its hash
+        against this sheet. No provider is called.
       </p>
 
       <div className="sheet-actions">

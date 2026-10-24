@@ -1,0 +1,39 @@
+{
+  "version": "consent-receipt/0",
+  "request": {
+    "id": "195dccd7-59fb-4338-b645-c27ece49b752",
+    "item": "Documents/lab-report.md",
+    "purpose": "compare values to reference ranges",
+    "provider": "OpenAI",
+    "model": "gpt-mini-placeholder",
+    "terms": [
+      "used only to answer this conversation",
+      "sent once to the provider named above, not kept on our side",
+      "we do not permit training on it; the provider's policy of <YYYY-MM-DD>: <url>",
+      "the provider has its own retention window; see that policy"
+    ]
+  },
+  "decision": "APPROVE",
+  "file": {
+    "sha256_client": "8addd65f74331a6ab3a6759b4db4adff9695c65c80a4adc8a6da8b965297231d",
+    "sha256_relay": "8addd65f74331a6ab3a6759b4db4adff9695c65c80a4adc8a6da8b965297231d",
+    "size": 1288
+  },
+  "user": {
+    "pubkey": "2z1FuQ2cQAJULvc35SBdHvZwAyCLgSpRA6RJkhxvvcS1",
+    "consent_text": "Consent receipt request\nVersion: consent-receipt/0\n\nService: Flair Health consent receipts (prototype)\nOperator: Regal Pines Pte. Ltd.\nOperator key: C2DvMQHkaNruwpxwtLLhtJtFyP1W4bc1VcjEgQNYksUS\nItem: Documents/lab-report.md\nSHA-256: 8addd65f74331a6ab3a6759b4db4adff9695c65c80a4adc8a6da8b965297231d\nSize: 1,288 bytes\nPurpose: compare values to reference ranges\nProvider: OpenAI\nModel: gpt-mini-placeholder\nTerms (ours):\n  - used only to answer this conversation\n  - sent once to the provider named above, not kept on our side\n  - we do not permit training on it; the provider's policy of <YYYY-MM-DD>: <url>\n  - the provider has its own retention window; see that policy\nDecision: APPROVE\nRequest ID: 195dccd7-59fb-4338-b645-c27ece49b752\nIssued at: 2026-10-05T12:33:40Z\nExpires at: 2026-10-05T12:38:40Z\nSigned by: 2z1FuQ2cQAJULvc35SBdHvZwAyCLgSpRA6RJkhxvvcS1",
+    "signature": "3iTkPyXb62CuDD8isW17LnjdpTNFvfG39tneRSQeJGd8LRATui42a8ZDTQsro2et4wX45iDSY6ESJuhrRC5JpSuP"
+  },
+  "org": {
+    "service": "Flair Health consent receipts (prototype)",
+    "operator": "Regal Pines Pte. Ltd.",
+    "pubkey": "C2DvMQHkaNruwpxwtLLhtJtFyP1W4bc1VcjEgQNYksUS"
+  },
+  "time": {
+    "issued_at": "2026-10-05T12:33:40Z",
+    "relay_signed_at": "2026-10-05T12:34:30Z"
+  },
+  "receipt_hash": "27769ffee60908cb067b61f03a3ce43788897690915e739daf867373a16d8fc7",
+  "org_signature": "49BvhpvcCeVn5bPbSm6isSTpoyScaBN25bdxxjcrAX4Zfi9ku9eyDVz3y9ETHwvm13wHGueqtrsmSKKdUzGWB8sq",
+  "anchor": null
+}

@@ -11,8 +11,10 @@ const kp = nacl.sign.keyPair();
 const PUB = bs58.encode(kp.publicKey);
 const sign = (msg: string) => bs58.encode(nacl.sign.detached(new TextEncoder().encode(msg), kp.secretKey));
 const anchored = new Set<string>();
+const orgKp = nacl.sign.keyPair();      // generated per run, never a real key file
 const mkApp = () => createApp({
-  secret: SECRET, domain: DOMAIN, perMinute: 3,
+  secret: SECRET, domain: DOMAIN, perMinute: 3, model: "gpt-mini-placeholder",
+  org: { pubkey: bs58.encode(orgKp.publicKey), sign: (m) => nacl.sign.detached(m, orgKp.secretKey) },
   anchor: async (hex) => {
     if (anchored.has(hex)) throw new AlreadyAnchoredError("PDA111");
     anchored.add(hex);
