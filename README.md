@@ -27,7 +27,7 @@ You need Node 24 or later. The first two steps need no keys, wallet or SOL.
    npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
    ```
 
-   You should see four PASS lines: the account exists, the stored hash matches, the organisation matches, and the slot and time.
+   You should see four PASS lines: the account exists, the stored hash matches, the organisation matches, and the slot and time (slot 505578580, 29 September 2026). The closing line also says "signed", but this step reads only the anchor; signatures are checked when you pass a full receipt with `--receipt`. The same record is on [Solana Explorer](https://explorer.solana.com/address/FfdETrPzRFvoUe7xz9wAJWViTr4LFwLSU3oYjajiEy1n?cluster=devnet).
 
 3. Optionally, run the browser demo. It shows a consent sheet, asks your wallet to sign it, and keeps the receipt in the browser. It does not anchor the receipt yet.
 
@@ -89,9 +89,9 @@ A matching fingerprint on Solana shows that the receipt existed no later than th
 and has not been changed since. The receipt itself shows what the person approved and what was
 sent.
 
-It does not show that the company kept its word afterwards. A receipt records the promise and the
-request; it cannot watch what happens next. It does not stop data leaving the phone. It makes what
-left, and on what terms, something the person can check. It is not a legal certificate.
+One caveat applies to the Anchor program in this repository: we hold its upgrade authority, so a later version could in principle change or remove a stored record. The transaction that created the record stays in the ledger either way. Flair's memos do not carry this caveat, because Solana's Memo program cannot be upgraded. [docs/SOLANA.md](docs/SOLANA.md) has the detail.
+
+A receipt does not show that the company kept its word after the data arrived. It does not stop data leaving the phone, and it is not a legal certificate.
 
 ## What is in this repository
 
