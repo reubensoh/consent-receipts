@@ -7,6 +7,41 @@ changed since.
 
 "Consent receipts" is a descriptive name, not a brand.
 
+## For judges
+
+Added on 31 October 2026, after the hackathon submission, to make the project quicker to check. The code has not changed since the tag `colosseum-submission`. Later commits only change this README and add docs/SOLANA.md. To see the repository exactly as submitted, run `git checkout colosseum-submission`.
+
+You need Node 24 or later. The first two steps need no keys, wallet or SOL.
+
+1. Build and run the tests, which work offline:
+
+   ```bash
+   npm ci && npm run build && npm test
+   ```
+
+   21 tests should pass, covering the receipt format and the relay.
+
+2. Check a test fingerprint that is already on Solana devnet (the SHA-256 of "abc", so it holds nothing about anyone). This only reads from the chain:
+
+   ```bash
+   npm run verify-receipt -w scripts -- --digest ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+   ```
+
+   You should see four PASS lines: the account exists, the stored hash matches, the organisation matches, and the slot and time.
+
+3. Optionally, run the browser demo. It shows a consent sheet, asks your wallet to sign it, and keeps the receipt in the browser. It does not anchor the receipt yet.
+
+   In `apps/relay`, copy `.env.example` to `.env` and set `SESSION_SECRET` to the output of `openssl rand -hex 32`. Then create a throwaway organisation key and start the relay:
+
+   ```bash
+   mkdir -p .keys && node -e "const {Keypair}=require('@solana/web3.js');console.log(JSON.stringify(Array.from(Keypair.generate().secretKey)))" > .keys/org.json
+   npm run dev
+   ```
+
+   In a second terminal, from the repository root, run `npm run dev -w apps/web` and open http://localhost:5173 with a Solana wallet set to devnet. Signing costs nothing, so the wallet needs no SOL.
+
+More detail, including how to check a full receipt, is under [Try it on devnet](#try-it-on-devnet).
+
 ## Why this exists
 
 Apps send people's data to AI services and other companies every day. The terms live in a policy
